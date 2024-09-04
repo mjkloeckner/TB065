@@ -1,29 +1,32 @@
-import numpy as np
 import matplotlib.pyplot as plt
+
+from numpy import arange
 from scipy.io import wavfile
 
-file_names = ['InASentimentalMood.wav', 'Zombie.wav' ]
+file_names = ['InASentimentalMood.wav', 'Zombie.wav']
 
-figures = []
-for i in range(len(file_names)):
-    file_name = file_names[i]
-    figure_title='Gráfico de `' + str(file_name) + '` en el dominio del tiempo'
+def plot_wav_data(time, data, file_name):
+    figure_title = 'Gráfico de `' + str(file_name) + '` en dominio de tiempo'
 
-    sample_rate, data = wavfile.read(file_name)
-    print("`" + str(file_name)+ "` sample_rate: " + str(sample_rate) + " Hz")
-
-    if len(data.shape) > 1:
-        data = data[:, 0]
-
-    time = np.arange(len(data)) / sample_rate
-
-    figures.append(plt.figure(num=figure_title, figsize=(12, 6)))
+    new_figure = plt.figure(num=figure_title, figsize=(12, 6))
     plt.plot(time, data, label='Señal de Audio')
     plt.title(figure_title)
     plt.xlabel('Tiempo [s]')
     plt.ylabel('Amplitud')
     plt.grid(True)
     plt.legend()
+
+    return new_figure
+
+figures = []
+for i, file_name in enumerate(file_names):
+    sample_rate, data = wavfile.read(file_name)
+
+    if len(data.shape) > 1:
+        data = data[:, 0]
+
+    time = arange(len(data)) / sample_rate
+    figures.append(plot_wav_data(time, data, file_name))
     figures[i].show()
 
 plt.show()
