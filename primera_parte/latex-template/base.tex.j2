@@ -86,7 +86,7 @@ override this.-=))
     % The default LaTeX title has an obnoxious amount of whitespace. By default,
     % titling removes some of it. It also provides customization options.
     \usepackage{titling}
-    \setlength{\droptitle}{0em}
+    \setlength{\droptitle}{-2em}
     \usepackage{longtable} % longtable support required by pandoc >1.10
     \usepackage{booktabs}  % table support for pandoc > 1.12.2
     \usepackage{array}     % table support for pandoc >= 2.11.3
@@ -229,13 +229,13 @@ override this.-=))
     ((* block margins *))
     \geometry{
         verbose,
-        tmargin=2.00cm, 
-        bmargin=1.00cm,
-        lmargin=1.75cm,
-        rmargin=1.75cm,
+        tmargin=2.50cm, 
+        bmargin=1.25cm,
+        lmargin=1.90cm,
+        rmargin=1.90cm,
         includefoot,
         heightrounded,
-        footskip=0.50cm
+        footskip=1.20cm
     }
 
     ((* endblock margins *))
