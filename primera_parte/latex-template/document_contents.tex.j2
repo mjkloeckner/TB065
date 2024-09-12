@@ -49,11 +49,12 @@
 ((* macro draw_figure(filename) -*))
 ((* set filename = filename | posix_path *))
 ((*- block figure scoped -*))
+    \vspace{-0.50em}
     \begin{center}
     \adjustimage{max size={\linewidth}{\paperheight}}{((( filename )))}
     \end{center}
     { \hspace*{\fill} \\}
-    \vspace{-2.5em}
+    \vspace{-2.75em}
 ((*- endblock figure -*))
 ((*- endmacro *))
 
