@@ -43,12 +43,13 @@ override this.-=))
     }
     \usepackage{upquote} % Upright quotes for verbatim code
     \usepackage{eurosym} % defines \euro
-    \usepackage{helvet}
-    \renewcommand\familydefault{\sfdefault}
 
     \usepackage{iftex}
     \ifPDFTeX
         \usepackage[T1]{fontenc}
+        \usepackage{helvet}
+        \renewcommand\familydefault{\sfdefault}
+
         \IfFileExists{alphabeta.sty}{
               \usepackage{alphabeta}
           }{
@@ -58,6 +59,7 @@ override this.-=))
     \else
         \usepackage{fontspec}
         \usepackage{unicode-math}
+        \setmainfont{Nimbus Sans}
     \fi
 
     \usepackage{fancyvrb} % verbatim replacement that allows latex
