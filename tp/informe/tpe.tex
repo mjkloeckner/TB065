@@ -70,6 +70,8 @@
     \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
     \adjustboxset{max size={\linewidth}{\paperheight}}
 
+    \setcounter{secnumdepth}{0}
+
     % The hyperref package gives us a pdf with properly built
     % internal navigation ('pdf bookmarks' for the table of contents,
     % internal cross-reference links, web links for URLs, etc.)
@@ -417,18 +419,19 @@
     
 
     
-    
-
     \hypertarget{trabajo-pruxe1ctico-especial}{%
 \section{Trabajo Práctico Especial}\label{trabajo-pruxe1ctico-especial}}
 
 Señales y Sistemas (TB065) - Curso 2 - Grupo 11 - 1C2025 - FIUBA\\
-Martin Klöckner - mklockner@fi.uba.ar\\
-Pablo Martinez Madero - pmartinezm@fi.uba.ar\\
-Ernesto Dei Castelli - edei@fi.uba.ar
+Martin Klöckner -
+\href{mailto:mklockner@fi.uba.ar}{mklockner@fi.uba.ar}\\
+Pablo Martinez Madero -
+\href{mailto:pmartinezm@fi.uba.ar}{pmartinezm@fi.uba.ar}\\
+Ernesto Dei Castelli -
+\href{mailto:edei@fi.uba.ar}{edei@fi.uba.ar}
 
     \hypertarget{introducciuxf3n}{%
-\subsubsection{Introducción}\label{introducciuxf3n}}
+\subsection{Introducción}\label{introducciuxf3n}}
 
 El habla humana puede ser entendida y analizada mediante modelos de
 sistemas lineales e invariantes en el tiempo (sistemas LTI). En este
@@ -449,7 +452,7 @@ transformada rápida de Fourier (FFT) la cual nos permite extraer la
 frecuencia fundamental (f0) y los formantes.
 
     \hypertarget{obtenciuxf3n-y-gruxe1fico-de-muestras}{%
-\subsubsection{Obtención y Gráfico de
+\subsection{Obtención y Gráfico de
 Muestras}\label{obtenciuxf3n-y-gruxe1fico-de-muestras}}
 
 Para comenzar, como señal de muestra se realiza la grabación de dos
@@ -495,8 +498,8 @@ tengan los archivos una vez descargados.
 \PY{n}{short\PYZus{}sample\PYZus{}file\PYZus{}name} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{picasso\PYZus{}short.wav}\PY{l+s+s1}{\PYZsq{}}
 \PY{n}{long\PYZus{}sample\PYZus{}file\PYZus{}name} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{picasso\PYZus{}long.wav}\PY{l+s+s1}{\PYZsq{}}
 
-\PY{n}{urlretrieve}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{https://github.com/mjkloeckner/TB065/raw/main/data/picasso\PYZus{}short.wav}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{short\PYZus{}sample\PYZus{}file\PYZus{}name}\PY{p}{)}\PY{p}{;}
-\PY{n}{urlretrieve}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{https://github.com/mjkloeckner/TB065/raw/main/data/picasso\PYZus{}long.wav}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{long\PYZus{}sample\PYZus{}file\PYZus{}name}\PY{p}{)}\PY{p}{;}
+\PY{n}{urlretrieve}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{https://github.com/mjkloeckner/TB065/raw/main/tp/data/picasso\PYZus{}short.wav}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{short\PYZus{}sample\PYZus{}file\PYZus{}name}\PY{p}{)}\PY{p}{;}
+\PY{n}{urlretrieve}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{https://github.com/mjkloeckner/TB065/raw/main/tp/data/picasso\PYZus{}long.wav}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{long\PYZus{}sample\PYZus{}file\PYZus{}name}\PY{p}{)}\PY{p}{;}
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -587,7 +590,7 @@ posteriormente pasarlo como argumento a la función \texttt{graph\_data}.
 
     \vspace{-0.50em}
     \begin{center}
-    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_16_0.png}
+    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_15_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     \vspace{-2.75em}
@@ -607,7 +610,7 @@ archivo de aproximadamente el doble de duración.
 
     \vspace{-0.50em}
     \begin{center}
-    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_18_0.png}
+    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_17_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     \vspace{-2.75em}
@@ -637,7 +640,7 @@ fundamental de la misma.
 
     \vspace{-0.50em}
     \begin{center}
-    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_21_0.png}
+    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_20_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     \vspace{-2.75em}
@@ -659,7 +662,7 @@ aproximada de \texttt{132.3Hz}
 
     \vspace{-0.50em}
     \begin{center}
-    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_23_0.png}
+    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_22_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     \vspace{-2.75em}
@@ -684,7 +687,7 @@ por lo que la señal resultante no lo es.
 
     \vspace{-0.50em}
     \begin{center}
-    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_25_0.png}
+    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_24_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     \vspace{-2.75em}
@@ -703,7 +706,7 @@ intervalo se puede ver en la figura 6 a continuación.
 
     \vspace{-0.50em}
     \begin{center}
-    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_27_0.png}
+    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_26_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     \vspace{-2.75em}
@@ -726,7 +729,7 @@ cuasi-periodico.
 
     \vspace{-0.50em}
     \begin{center}
-    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_29_0.png}
+    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_28_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     \vspace{-2.75em}
@@ -790,7 +793,7 @@ la señal periodica producto de pronunciar la ``a''.
 
     \vspace{-0.50em}
     \begin{center}
-    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_34_0.png}
+    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_33_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     \vspace{-2.75em}
@@ -812,7 +815,7 @@ para realizar la FFT
 
     \vspace{-0.50em}
     \begin{center}
-    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_36_0.png}
+    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_35_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     \vspace{-2.75em}
@@ -834,7 +837,7 @@ período resulta como se muestra a continuación en la figura 10.
 
     \vspace{-0.50em}
     \begin{center}
-    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_38_0.png}
+    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_37_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     \vspace{-2.75em}
@@ -855,7 +858,7 @@ resultan como se muestra en la figura 11.
 
     \vspace{-0.50em}
     \begin{center}
-    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_40_0.png}
+    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_39_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     \vspace{-2.75em}
@@ -876,7 +879,7 @@ resultan como en la figura 12 a continuación.
 
     \vspace{-0.50em}
     \begin{center}
-    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_42_0.png}
+    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_41_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     \vspace{-2.75em}
@@ -897,7 +900,7 @@ coeficientes de Fourier resulta como se muestra en la figura 13.
 
     \vspace{-0.50em}
     \begin{center}
-    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_44_0.png}
+    \adjustimage{max size={\linewidth}{\paperheight}}{tpe_files/tpe_43_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     \vspace{-2.75em}
