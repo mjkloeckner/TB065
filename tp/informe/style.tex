@@ -8,11 +8,11 @@
 % 			right=2.00cm,
 % 			bmargin=2.50cm]{geometry}
 \usepackage[a4paper,
-			top=2.5cm,
-			bottom=3.00cm,
-			left=2.00cm,
-			right=2.00cm,
-			bmargin=2.50cm]{geometry}
+			top=3.0cm,
+			bottom=2.75cm,
+			left=2.25cm,
+			right=2.25cm,
+			bmargin=2.75cm]{geometry}
 
 \usepackage{titlesec}
 \usepackage{fontspec}
@@ -25,10 +25,14 @@
 \usepackage[font={small}]{caption}
 \usepackage{subcaption}
 
-% inline code (backticks in md)
 \linespread{1.10}
-\definecolor{bgcolor}{HTML}{e0e0e0}
+
+% inline code (backticks in md)
+\definecolor{bgcolor}{HTML}{ffffff}
 \let\oldtexttt\texttt
+
+\setlength{\fboxsep}{0pt}  % grosor del borde
+\setlength{\fboxrule}{0pt} % grosor del borde
 
 \renewcommand{\texttt}[1]{
 	\colorbox{bgcolor}{\oldtexttt{#1}}
@@ -224,7 +228,7 @@ BoldFont        =   *-Bold,
 \renewcommand*{\thempfootnote}{\ [\arabic{mpfootnote}]\ }
 
 % space between text and footer
-\setlength\footskip{35pt}
+\setlength\footskip{40pt}
 \setlength{\skip\footins}{12pt}
 
 % align first letter of all the lines in the footnotes
@@ -248,5 +252,5 @@ BoldFont        =   *-Bold,
 \setlength{\jot}{8pt} % valor por defecto es 3pt aproximadamente
 \makeatother
 
-\setlength{\columnsep}{12pt}
-% \setlength{\parskip}{2pt}  % espacio entre párrafos
+\setlength{\columnsep}{10pt}
+\setlength{\parskip}{4pt}  % espacio entre párrafos

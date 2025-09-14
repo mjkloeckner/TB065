@@ -19,7 +19,7 @@ def ticks_label_format(x, pos):
     return f"{x:.3f}".rstrip("0").rstrip(".")
 
 def graph_data(x, y, t=0, dt=0, a=0, da=0, y_min=0, y_max=0, show=True):
-    figure, axis = plt.subplots(figsize=(5, 5))
+    figure, axis = plt.subplots(figsize=(5, 4))
 
     axis.plot(x, y, label='Señal de Audio')
     axis.set(xlabel='Tiempo [s]', ylabel='Amplitud normalizada')
