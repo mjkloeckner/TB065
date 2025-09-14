@@ -8,10 +8,10 @@
 % 			right=2.00cm,
 % 			bmargin=2.50cm]{geometry}
 \usepackage[a4paper,
-			top=3.00cm,
+			top=2.5cm,
 			bottom=3.00cm,
-			left=2.20cm,
-			right=2.20cm,
+			left=2.00cm,
+			right=2.00cm,
 			bmargin=2.50cm]{geometry}
 
 \usepackage{titlesec}
@@ -96,19 +96,19 @@ BoldFont        =   *-Bold,
 % \titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
 
 \titlespacing*{\section}
-{0pt}{2ex plus 1ex minus .2ex}{1.75ex plus .2ex}
+{0pt}{1.25ex plus 0.0ex minus .2ex}{1.00ex plus 0ex}
 
 \titlespacing*{\subsection}
-{0pt}{1.75ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+{0pt}{1.00ex plus 0.0ex minus .2ex}{0.75ex plus 0ex}
 
 \titlespacing*{\subsubsection}
-{0pt}{1.5ex plus 1ex minus .2ex}{1.25ex plus .2ex}
+{0pt}{0.75ex plus 0.0ex minus .2ex}{0.50ex plus 0ex}
 
 \titlespacing*{\paragraph}
-{0pt}{1.5ex plus 1ex minus .2ex}{1.0ex plus .2ex}
+{0pt}{0.50ex plus 0.0ex minus .2ex}{0.25ex plus 0ex}
 
 \titlespacing*{\subparagraph}
-{0pt}{1.25ex plus 1ex minus .2ex}{1.0ex plus .2ex}
+{0pt}{0.50ex plus 0.0ex minus .2ex}{0.25ex plus 0ex}
 
 % spacing between formulas and text
 % \usepackage[nodisplayskipstretch]{setspace}
@@ -130,6 +130,7 @@ BoldFont        =   *-Bold,
 \usepackage{caption}
 % \captionsetup{font=normalsize, font=bf, labelfont=bf}
 \captionsetup[sub]{font=small,labelfont=md}
+\captionsetup{skip=0pt}   % espacio entre figura y caption
 
 \renewcommand\thesubfigure{\arabic{subfigure}}
 
@@ -248,3 +249,4 @@ BoldFont        =   *-Bold,
 \makeatother
 
 \setlength{\columnsep}{12pt}
+% \setlength{\parskip}{2pt}  % espacio entre párrafos

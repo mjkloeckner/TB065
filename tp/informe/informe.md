@@ -3,9 +3,9 @@
 Señales y sistemas (TB065) - FIUBA  
 Martin Klöckner - [mklockner@fi.uba.ar](mailto:mklockner@fi.uba.ar)  
 
-<!-- \vspace{-1.25em} -->
-<!-- \rule{\linewidth}{0.5pt} -->
-<!-- \vspace{-1.25em} -->
+\vspace{-1.00em}
+\rule{\linewidth}{0.5pt}
+\vspace{-1.25em}
 
 En el presente trabajo se realiza un análisis visual en el dominio temporal de
 dos señales musicales. Para realizar el análisis se utiliza un script de python
@@ -20,13 +20,16 @@ Para la primer muestra (archivo `cancion1.wav`) se realiza el gráfico de la
 misma en el dominio temporal, el resultado se muestra en la figura 1.
 
 La frecuencia de muestreo de la misma es 44100 Hz, esto se obtiene del mismo
-script utilizado para graficar el archivo.
+script utilizado para graficar el archivo, en el cual se divide la cantidad de
+muestras por la duración del archivo.
 
 \begin{figure}[H]
-  \centering
-  \hspace*{-1mm}
-  \includegraphics[width=\linewidth]{../plot/cancion1.png}
-  \caption{Gráfico de archivo 'cancion1.wav'}
+    \vspace{-1em}
+    \centering
+    \hspace*{-1mm}
+    \includegraphics[width=\linewidth]{../plot/cancion1.png}
+    \caption{Gráfico de archivo 'cancion1.wav'}
+    \vspace{-1em}
 \end{figure}
 
 ### Secciones cuasi-periódicas
@@ -36,30 +39,37 @@ amplitud, fase o frecuencia se dice que la señal es cuasi-periódica.
 
 Realizando un análisis visual en detalle de la muestra se buscan partes donde se
 comporte como tal, dos ejemplos se dan en las figuras 2 y 3. En la primera se
-gráfica el intervalo $0.248$ s y $0.256$ s, mientras que en la segunda se
+gráfica el intervalo $0.248$ s a $0.256$ s, mientras que en la segunda se
 gráfica el intervalo $0.520$ s a $0.528$ s.
 
+\vspace{-2em}
 \begin{figure}[H]
 \centering
 \hspace*{-1mm}
 \includegraphics[width=\linewidth]{../plot/cancion1_0_248s_a_0_256s.png}
 \caption{Sección cuasi-periódica archivo 'cancion.wav'}
+\vspace{-2em}
 \end{figure}
 
 Dentro de los intervalos cuasi-periódicos graficados, se pueden detectar
-visualmente los períodos fundamentales $T0$, los cuales se ven resaltados en
-color celeste claro.
+visualmente los períodos fundamentales, los cuales se ven resaltados en color
+celeste claro.
 
 Curiosamente en ambos casos el período es igual y resulta $T=0.003$ s,
 lo cual corresponde con una frecuencia de aproximadamente $333$ Hz. Comparando
 con notas musicales de tabla esto se asemeja a una nota *E4*, la cual tiene una
-frecuencia de $329.228$ Hz.
+frecuencia de $329.228$ Hz. Siendo que el período se relaciona de manera inversa
+con la frecuencia y esta de manera directa con la nota musical, se puede
+asegurar que al disminuir este período la frecuencia aumentará y la nota musical
+será mas aguda, mientras que en el caso contrario si aumenta el período la
+frecuencia disminuye y también la nota musical.
 
 \begin{figure}[H]
 \centering
 \hspace*{-1mm}
 \includegraphics[width=\linewidth]{../plot/cancion1_0_52s_a_0_528s.png}
 \caption{Sección cuasi-periódica archivo 'cancion.wav'}
+\vspace{-2em}
 \end{figure}
 
 ## Segunda muestra
