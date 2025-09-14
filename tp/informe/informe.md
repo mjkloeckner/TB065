@@ -114,33 +114,60 @@ Dado que las secciones son no periódicas, no se puede hablar de una frecuencia
 fundamental como si se podía en las secciones cuasi-periódicas en la primer
 muestra.
 
+## Filtrado
 
-<!--
+Para obtener la salida de la señal luego de aplicarle un filtro (respuesta al
+impulso del primer filtro correspondiente al archivo `respuesta_impulso_1.txt` y
+del segundo filtro correspondiente al archivo `respuesta_impulso_2.txt`) es
+necesario realizar una convolución entre la señal de entrada y la respuesta al
+impulso del filtro, esto suponiendo que el filtro es un sistema LTI (si no lo
+fuera no se podría calcular la salida solo teniendo la respuesta al impulso).
+
+La salida del filtro 1 al aplicar la primer muestra se puede ver en la figura 7,
+se puede ver que atenúa partes de la señal principalmente cerca del segundo
+$7$ y también una parte cerca del segundo $8.75$.
+
 \begin{figure}[H]
 \centering
-\hspace*{-1mm}
 \includegraphics[width=\linewidth]{../plot/cancion1_filter1_output.png}
-\caption{Representación gráfica de grafos}
+\caption{Primer muestra salida de filtro 1}
 \end{figure}
+
+Aplicando el segundo filtro a la primer muestra resulta como se muestra e el
+gráfico de figura 8. Se puede ver que esta a diferencia del filtro 1, no atenúa
+o amplifica significativamente partes de la señal, si no que es más leve.
 
 \begin{figure}[H]
 \centering
-\hspace*{-1mm}
 \includegraphics[width=\linewidth]{../plot/cancion1_filter2_output.png}
-\caption{Representación gráfica de grafos}
+\caption{Primer muestra salida de filtro 2}
 \end{figure}
+
+De manera análoga para la segunda muestra se aplican los filtros mediante la
+convolución entre la señal de muestra y la respuesta al impulso del respectivo
+filtro. La salida de la segunda muestra al aplicar el primer y segundo filtro se
+puede ver en las figuras 9 y 10 respectivamente.
+
+Se puede ver claramente en la figura 9 y comparando con el gráfico de la muestra
+original (figura 4) que se atenúa la señal principalmente en la primera parte de
+la señal (antes del segundo $18.5$) aunque también ocurre en la segunda parte,
+por ejemplo en el pico que ocurre cerca del segundo $24.5$, en la señal original
+alcanza un máximo de $1.00$ mientras que en la señal filtrada se atenúa a
+$0.75$.
 
 \begin{figure}[H]
 \centering
-\hspace*{-1mm}
 \includegraphics[width=\linewidth]{../plot/cancion2_6s_filter1_output.png}
-\caption{Representación gráfica de grafos}
+\caption{Segunda muestra salida filtro 1}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\hspace*{-1mm}
 \includegraphics[width=\linewidth]{../plot/cancion2_6s_filter2_output.png}
-\caption{Representación gráfica de grafos}
+\caption{Segunda muestra salida filtro 2}
 \end{figure}
--->
+
+En el caso del segundo filtro, de manera análoga a lo que ocurría con la primer
+muestra, no se observa un cambio significativo en la señal filtrada, si no mas
+bien una leve atenuación general, aunque si se percibe una drástica atenuación
+de un instante especifico de la señal en el segundo $29.9$ aproximadamente.
