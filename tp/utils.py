@@ -3,34 +3,44 @@ from matplotlib.ticker import AutoMinorLocator
 from matplotlib.ticker import MultipleLocator
 from matplotlib.ticker import MaxNLocator
 from matplotlib.ticker import FuncFormatter
+from cycler import cycler
 
 import matplotlib
 import numpy as np
 import os
 
+from scipy.io import wavfile
+
 plot_dir_name = 'plot'
 
 matplotlib.rcParams['font.family'] = 'Inter'
 matplotlib.rcParams['font.size'] = 12
+matplotlib.rcParams['axes.prop_cycle'] = cycler(
+        color=['#1f77b4', '#ff0000', 'green', 'orange'])
 matplotlib.use("TkAgg")
 
 def ticks_label_format(x, pos):
     # 3 decimals, strip trailing zeros
     return f"{x:.3f}".rstrip("0").rstrip(".")
 
-def graph_data(x, y, t=0, dt=0, a=0, da=0, y_min=0, y_max=0, show=True):
+def graph_multiple_data(x, y_arr, y_lab, t=0, dt=0, a=0, da=0, show=True):
     figure, axis = plt.subplots(figsize=(5, 4))
 
-    axis.plot(x, y, label='Señal de Audio')
+    for i, y in enumerate(y_arr):
+        axis.plot(x, y, label=y_lab[i], alpha=0.75)
+
     axis.set(xlabel='Tiempo [s]', ylabel='Amplitud normalizada')
 
     axis.minorticks_on()
-    axis.grid(True, which='major', linestyle='-', linewidth=0.50)
-    axis.grid(True, which='minor', linestyle=':', linewidth=0.50)
+    axis.grid(True, which='major', color='black', linestyle=':', linewidth=1.00)
+    axis.grid(True, which='minor', color='black', linestyle=':', linewidth=0.50)
 
     # configuracion de ticks del eje x
     axis.xaxis.set_major_locator(MaxNLocator(nbins=5))
-    axis.xaxis.set_minor_locator(AutoMinorLocator(4))  # 2 subdivisions between majors
+    axis.xaxis.set_minor_locator(AutoMinorLocator(5))
+
+    axis.yaxis.set_major_locator(MaxNLocator(nbins=5))
+    axis.yaxis.set_minor_locator(AutoMinorLocator(4))
 
     plt.tight_layout()
 
@@ -51,10 +61,56 @@ def graph_data(x, y, t=0, dt=0, a=0, da=0, y_min=0, y_max=0, show=True):
 
     return figure, axis
 
-def plot(fs, data, file_path="", t_start=0, t_width=0, a=0, da=0):
-    # normaliza la amplitud dividiendo por el valor maximo del tipo de dato
+# todos deben la misma cantidad de elementos que el primero
+def plot_multiple(fs, data_arr, leg_arr, t=0, dt=0, a=0, da=0):
+    x = np.arange(len(data_arr[0])) / fs
+    fig, ax = graph_multiple_data(x, data_arr, leg_arr, t=t, dt=dt, a=a, da=da, show=False)
+    return fig, ax
+
+def graph_data(x, y, t=0, dt=0, a=0, da=0, show=True):
+    figure, axis = plt.subplots(figsize=(5, 4))
+
+    axis.plot(x, y, label='Señal de audio')
+    axis.set(xlabel='Tiempo [s]', ylabel='Amplitud normalizada')
+
+    axis.minorticks_on()
+    axis.grid(True, which='major', color='black', linestyle=':', linewidth=1.00)
+    axis.grid(True, which='minor', color='black', linestyle=':', linewidth=0.50)
+
+    # configuracion de ticks del eje x
+    axis.xaxis.set_major_locator(MaxNLocator(nbins=5))
+    axis.xaxis.set_minor_locator(AutoMinorLocator(5))
+
+    axis.yaxis.set_major_locator(MaxNLocator(nbins=5))
+    axis.yaxis.set_minor_locator(AutoMinorLocator(4))
+
+    plt.tight_layout()
+
+    # max 3 decimals
+    axis.xaxis.set_major_formatter(FuncFormatter(ticks_label_format))
+
+    axis.set_xlim([t, t+dt if dt > 0 else x[-1]])
+    axis.set_ylim(-1.1, 1.1)
+
+    # resaltado de parte de la señal (solo si a != 0)
+    axis.axvspan(a, a+da, color='skyblue',
+                 alpha=0 if a == 0 else 0.50,
+                 label=f"Un periodo T={da}s" if da != 0 else "")
+    axis.legend()
+
+    if show:
+        plt.show()
+
+    return figure, axis
+
+def normalize(data):
     data = data.astype(np.float32)
     data /= np.max(np.abs(data))
+    return data
+
+def plot(fs, data, file_path="", t_start=0, t_width=0, a=0, da=0):
+    # normaliza la amplitud dividiendo por el valor maximo del tipo de dato
+    data = normalize(data)
 
     t = np.arange(len(data)) / fs
     fig, ax = graph_data(t, data, t=t_start, dt=t_width, a=a, da=da, show=False)
@@ -82,3 +138,15 @@ def save_plot(fig, src_file_path, t_start=0, t_width=0, extra_name=''):
      # crea carpeta para plots
     os.makedirs(plot_dir_name, exist_ok=True)
     fig.savefig(fig_file_name, dpi=300, bbox_inches="tight")
+
+def save_convolved_to_wav(convolved, fs, file_path):
+    # 4️⃣ Normalize to prevent clippin
+    convolved = convolved / np.max(np.abs(convolved))
+
+    # 5️⃣ Convert to 16-bit PCM for WAV
+    convolved_int16 = np.int16(convolved * 32767)
+
+    print(f'- "{file_path}"')
+    # 6️⃣ Save to WAV
+    wavfile.write(file_path, fs, convolved_int16)
+

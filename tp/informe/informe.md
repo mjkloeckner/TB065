@@ -116,7 +116,7 @@ muestra.
 
 ## Filtrado
 
-Para obtener la salida de la señal luego de aplicarle un filtro (respuesta al
+Para obtener la salida de la señal luego de pasarla por un filtro (respuesta al
 impulso del primer filtro correspondiente al archivo `respuesta_impulso_1.txt` y
 del segundo filtro correspondiente al archivo `respuesta_impulso_2.txt`) es
 necesario realizar una convolución entre la señal de entrada y la respuesta al
@@ -124,50 +124,140 @@ impulso del filtro, esto suponiendo que el filtro es un sistema LTI (si no lo
 fuera no se podría calcular la salida solo teniendo la respuesta al impulso).
 
 La salida del filtro 1 al aplicar la primer muestra se puede ver en la figura 7,
-se puede ver que atenúa partes de la señal principalmente cerca del segundo
-$7$ y también una parte cerca del segundo $8.75$.
+en la figura se puede ver que atenúa partes de la señal y amplifica otras, en
+particular amplifica principalmente antes del segundo $6$ y atenúa drásticamente
+luego.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{../plot/cancion1_filter1_output.png}
+\includegraphics[width=\linewidth]{../plot/cancion1_filter1_output_compare.png}
 \caption{Primer muestra salida de filtro 1}
 \end{figure}
 
 Aplicando el segundo filtro a la primer muestra resulta como se muestra e el
 gráfico de figura 8. Se puede ver que esta a diferencia del filtro 1, no atenúa
-o amplifica significativamente partes de la señal, si no que es más leve.
+o amplifica significativamente partes de la señal, si no que realiza una leve
+atenuación de toda la señal.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{../plot/cancion1_filter2_output.png}
+\includegraphics[width=\linewidth]{../plot/cancion1_filter2_output_compare.png}
 \caption{Primer muestra salida de filtro 2}
 \end{figure}
+
+<!--
+En las figuras figuras 8 y 9 a continuación se superpone la señal original con
+la salida de esta señal "pasada" por los filtros 1 y 2 respectivamente, en estés
+figuras se ve aún mas claro el efecto de los filtros descritos anteriormente, en
+incluso se aprecia que se amplifica la primer parte de la señal, entre el inicio
+y el segundo $4$ aproximadamente.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{../plot/cancion1_filter1_output_compare.png}
+\caption{Comparacion entre señal original y filtrada}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{../plot/cancion1_filter2_output_compare.png}
+\caption{Comparacion entre señal original y filtrada}
+\end{figure}
+-->
 
 De manera análoga para la segunda muestra se aplican los filtros mediante la
 convolución entre la señal de muestra y la respuesta al impulso del respectivo
 filtro. La salida de la segunda muestra al aplicar el primer y segundo filtro se
 puede ver en las figuras 9 y 10 respectivamente.
 
-Se puede ver claramente en la figura 9 y comparando con el gráfico de la muestra
-original (figura 4) que se atenúa la señal principalmente en la primera parte de
-la señal (antes del segundo $18.5$) aunque también ocurre en la segunda parte,
-por ejemplo en el pico que ocurre cerca del segundo $24.5$, en la señal original
-alcanza un máximo de $1.00$ mientras que en la señal filtrada se atenúa a
-$0.75$.
+Se puede ver claramente en la figura 9 que se atenúa la mayor parte de la señal
+pero principalmente en la primera mitad (antes del segundo $18.5$
+aproximadamente) y en menor medida en la mitad restante, aunque en partes de la
+segunda mitad se atenúa drásticamente de todas formas, como por ejemplo en el
+segundo $29$ en el que se atenúa aproximadamente un 70% de la señal.
+
+<!--
+, por ejemplo en el pico
+que ocurre cerca del segundo $24.5$, en la señal original alcanza un máximo de
+$1.00$ mientras que en la señal filtrada se atenúa a $0.75$.
+-->
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{../plot/cancion2_6s_filter1_output.png}
-\caption{Segunda muestra salida filtro 1}
+\includegraphics[width=\linewidth]{../plot/cancion2_6s_filter1_output_compare.png}
+\caption{Segunda muestra salida de filtro 1}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{../plot/cancion2_6s_filter2_output.png}
-\caption{Segunda muestra salida filtro 2}
+\includegraphics[width=\linewidth]{../plot/cancion2_6s_filter2_output_compare.png}
+\caption{Segunda muestra salida de filtro 2}
 \end{figure}
 
 En el caso del segundo filtro, de manera análoga a lo que ocurría con la primer
 muestra, no se observa un cambio significativo en la señal filtrada, si no mas
 bien una leve atenuación general, aunque si se percibe una drástica atenuación
-de un instante especifico de la señal en el segundo $29.9$ aproximadamente.
+de un instante especifico de la señal, en el segundo $29.9$ aproximadamente.
+
+En todos los casos, tanto para la primer muestra como para la segunda y tanto
+para el primer filtro como el segundo, escuchando la respectiva salida se
+confirma lo analizado desde el punto de vista del gráfico de la señal, pero
+ademas se aprecia que el primer filtro realiza una atenuación de las frecuencias
+mas altas (sonidos agudos) mientras que el segundo disminuye las frecuencias
+bajas (o sonidos graves) esto ultimo no se aprecia en el gráfico de la señal, ya
+que parece no tener efecto mas que une leve atenuación.
+
+## Sonido de diferentes instrumentos
+
+Se generaron 3 muestras diferentes a las ya utilizadas, correspondientes con la
+nota *A4* (La4, $440$ Hz) con 3 instrumentos musicales distintos: un clarinete,
+una flauta y un violin. Los gráficos de las muestras resultantes se muestran en
+las figuras 11, 12 y 13, para el clarinete, la flauta y el violin,
+respectivamente.
+
+Si bien todos los sonidos tienen la misma frecuencia, ya que es la misma nota
+musical, el sonido escuchado percibido es diferente, esto puede ser producto de
+la forma de onda, lo cual queda clara la diferencia entre la onda producida por
+cada instrumento en los respectivos gráficos.
+
+\pagebreak
+
+En cuanto a los sonidos percibidos, el mas apagado o neutro es el producido por
+la flauta, mientras que el mas agudo o "afilado" es el producido por el violin,
+el sonido del clarinete es un intermedio entre ambos, un sonido ni muy agudo ni
+muy grave o apagado, y con cierto carácter metálico.
+
+Para el caso del clarinete, cuya señal se puede ver en la figura 11 a
+continuación se puede ver que la onda se parece a una onda cuadrada. En el
+dominio de frecuencia, las ondas cuadradas ideales se componen de armónicos
+impares.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{../plot/a4_clarinete.png}
+\caption{Sonido de clarinete}
+\end{figure}
+
+Para la señal producida por la flauta que se puede ver en la figura 12, se puede
+ver que se asemeja a una señal senoidal pura, aunque no tan simétrica en los
+picos, las ondas sinodales en el dominio de frecuencia tienen un único armónico,
+y es el fundamental, es por esto que el sonido es mas neutro y no tan
+"brillante" o agudo.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{../plot/a4_flauta.png}
+\caption{Sonido de flauta}
+\end{figure}
+
+Por ultimo para para la señal producida por el violin, la cual se puede ver en
+la figura 13, se asemeja a una onda triangular con pendiente decreciente, estas
+ondas triangulares en el dominio de frecuencia también tienen armónicos impares
+como la onda cuadrada, pero estos armónicos tienen mayor amplitud, es por esto
+que si bien tienen un sonido similar, el sonido del violin es mas agudo.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{../plot/a4_violin.png}
+\caption{Sonido de violin}
+\end{figure}
