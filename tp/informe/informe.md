@@ -171,8 +171,8 @@ y es el fundamental, es por esto que el sonido es mas neutro y no tan
 
 ![Sonido de flauta](../plot/a4_flauta.png)
 
-Por ultimo para para la señal producida por el violin, la cual se puede ver en
-la figura 13, se asemeja a una onda triangular con pendiente decreciente, estas
+Por ultimo para la señal producida por el violin, la cual se puede ver en la
+figura 13, se asemeja a una onda triangular con pendiente decreciente, estas
 ondas triangulares en el dominio de frecuencia también tienen armónicos impares
 como la onda cuadrada, pero estos armónicos tienen mayor amplitud, es por esto
 que si bien tienen un sonido similar, el sonido del violin es mas agudo.
