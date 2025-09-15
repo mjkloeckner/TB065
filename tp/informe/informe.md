@@ -12,14 +12,10 @@ Ernesto Dei Castelli - [edei@fi.uba.ar](mailto:edei@fi.uba.ar)
 
 En el presente trabajo se realiza un análisis en el dominio temporal de en
 principio dos señales musicales de muestra, en las cuales se buscan porciones
-cuasi-periódicas y no periódicas, y se luego se filtran utilizando dos filtros
-diferentes. Y por ultimo, se generan mediante simulación de tres instrumentos
-musicales diferentes tres señales, las cuales se analiza su forma en el dominio.
-
-<!-- en principio las señales completas y luego porciones de ambas en busca de -->
-<!-- intervalos particulares. Por ultimo se analiza el comportamiento de las señales -->
-<!-- al aplicarse dos filtros diferentes, teniendo solo la respuesta al impulso de -->
-<!-- los filtros. -->
+cuasi-periódicas y no periódicas, luego se filtran utilizando dos filtros
+diferentes. Por ultimo, se generan mediante simulación de tres instrumentos
+musicales diferentes, tres señales, las cuales solo se analiza y compara la
+forma en el dominio temporal.
 
 ## Primer muestra
 
@@ -75,9 +71,6 @@ frecuencia disminuye y también la nota musical.
 \end{figure}
 
 ## Segunda muestra
-
-<!-- De manera análoga a lo realizado para la primer muestra (archivo -->
-<!-- `cancion1.wav`) se realiza para la segunda muestra (archivo `cancion2.wav`). -->
 
 Utilizando el mismo script de python utilizado para la primer muestra (archivo
 `cancion1.wav`) se gráfica la señal de la segunda muestra (correspondiente al
@@ -152,26 +145,6 @@ atenuación de toda la señal.
 \caption{Primer muestra salida de filtro 2}
 \end{figure}
 
-<!--
-En las figuras figuras 8 y 9 a continuación se superpone la señal original con
-la salida de esta señal "pasada" por los filtros 1 y 2 respectivamente, en estés
-figuras se ve aún mas claro el efecto de los filtros descritos anteriormente, en
-incluso se aprecia que se amplifica la primer parte de la señal, entre el inicio
-y el segundo $4$ aproximadamente.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\linewidth]{../plot/cancion1_filter1_output_compare.png}
-\caption{Comparacion entre señal original y filtrada}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\linewidth]{../plot/cancion1_filter2_output_compare.png}
-\caption{Comparacion entre señal original y filtrada}
-\end{figure}
--->
-
 De manera análoga para la segunda muestra se aplican los filtros mediante la
 convolución entre la señal de muestra y la respuesta al impulso del respectivo
 filtro. La salida de la segunda muestra al aplicar el primer y segundo filtro se
@@ -182,12 +155,6 @@ pero principalmente en la primera mitad (antes del segundo $18.5$
 aproximadamente) y en menor medida en la mitad restante, aunque en partes de la
 segunda mitad se atenúa drásticamente de todas formas, como por ejemplo en el
 segundo $29$ en el que se atenúa aproximadamente un 70% de la señal.
-
-<!--
-, por ejemplo en el pico
-que ocurre cerca del segundo $24.5$, en la señal original alcanza un máximo de
-$1.00$ mientras que en la señal filtrada se atenúa a $0.75$.
--->
 
 \begin{figure}[H]
 \centering
@@ -218,16 +185,15 @@ que parece no tener efecto mas que une leve atenuación.
 
 Se generaron tres muestras diferentes a las ya utilizadas, correspondientes con
 la nota *A4* (La4, $440$ Hz) mediante la simulación de tres instrumentos
-musicales distintos: un clarinete, una flauta y un violin. Los gráficos de las
-muestras resultantes se muestran en las figuras 11, 12 y 13, para el clarinete,
-la flauta y el violin, respectivamente.
+musicales distintos: un clarinete, una flauta y un violin. Las señales
+generadas corresponden con los archivos `a4_clarinete.wav`, `a4_flauta.wav` y
+`a4_violin.wav` y los gráficos de cada señal se muestran en las figuras 11, 12 y
+13, respectivamente.
 
 Si bien todos los sonidos tienen la misma frecuencia, ya que es la misma nota
 musical, el sonido escuchado percibido es diferente, esto puede ser producto de
 la forma de onda generada por cada instrumento, lo cual queda clara la
 diferencia en los respectivos gráficos.
-
-\pagebreak
 
 Cada sonido percibido tiene características diferentes, el mas apagado o neutro
 es el producido por la flauta, mientras que el mas agudo o "afilado" es el
