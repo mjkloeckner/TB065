@@ -1,18 +1,25 @@
 # Trabajo Práctico
 
 Señales y sistemas (TB065) - FIUBA  
-Martin Klöckner - [mklockner@fi.uba.ar](mailto:mklockner@fi.uba.ar)  
+
+Martin Klöckner      - [mklockner@fi.uba.ar](mailto:mklockner@fi.uba.ar)  
+Mateo Lema Roveta    - [mlema@fi.uba.ar](mailto:mlema@fi.uba.ar)  
+Ernesto Dei Castelli - [edei@fi.uba.ar](mailto:edei@fi.uba.ar)  
 
 \vspace{-0.50em}
 \rule{\linewidth}{0.5pt}
 \vspace{-1.00em}
 
-En el presente trabajo se realiza un análisis visual en el dominio temporal de
-dos señales musicales. Para realizar el análisis se utiliza un script de python
-para graficar en principio las señales completas y luego porciones de ambas en
-busca de intervalos particulares. Por ultimo se analiza el comportamiento de las
-señales al aplicarse dos filtros diferentes, teniendo solo la respuesta al
-impulso de los filtros.
+En el presente trabajo se realiza un análisis en el dominio temporal de en
+principio dos señales musicales de muestra, en las cuales se buscan porciones
+cuasi-periódicas y no periódicas, y se luego se filtran utilizando dos filtros
+diferentes. Y por ultimo, se generan mediante simulación de tres instrumentos
+musicales diferentes tres señales, las cuales se analiza su forma en el dominio.
+
+<!-- en principio las señales completas y luego porciones de ambas en busca de -->
+<!-- intervalos particulares. Por ultimo se analiza el comportamiento de las señales -->
+<!-- al aplicarse dos filtros diferentes, teniendo solo la respuesta al impulso de -->
+<!-- los filtros. -->
 
 ## Primer muestra
 
@@ -24,11 +31,11 @@ script utilizado para graficar el archivo, en el cual se divide la cantidad de
 muestras por la duración del archivo.
 
 \begin{figure}[H]
-    \vspace{-1em}
-    \centering
-    \includegraphics[width=\linewidth]{../plot/cancion1.png}
-    \caption{Gráfico de archivo 'cancion1.wav'}
-    \vspace{-1em}
+\vspace{-1em}
+\centering
+\includegraphics[width=\linewidth]{../plot/cancion1.png}
+\caption{Gráfico de archivo 'cancion1.wav'}
+\vspace{-1em}
 \end{figure}
 
 ### Secciones cuasi-periódicas
@@ -209,23 +216,23 @@ que parece no tener efecto mas que une leve atenuación.
 
 ## Sonido de diferentes instrumentos
 
-Se generaron 3 muestras diferentes a las ya utilizadas, correspondientes con la
-nota *A4* (La4, $440$ Hz) con 3 instrumentos musicales distintos: un clarinete,
-una flauta y un violin. Los gráficos de las muestras resultantes se muestran en
-las figuras 11, 12 y 13, para el clarinete, la flauta y el violin,
-respectivamente.
+Se generaron tres muestras diferentes a las ya utilizadas, correspondientes con
+la nota *A4* (La4, $440$ Hz) mediante la simulación de tres instrumentos
+musicales distintos: un clarinete, una flauta y un violin. Los gráficos de las
+muestras resultantes se muestran en las figuras 11, 12 y 13, para el clarinete,
+la flauta y el violin, respectivamente.
 
 Si bien todos los sonidos tienen la misma frecuencia, ya que es la misma nota
 musical, el sonido escuchado percibido es diferente, esto puede ser producto de
-la forma de onda, lo cual queda clara la diferencia entre la onda producida por
-cada instrumento en los respectivos gráficos.
+la forma de onda generada por cada instrumento, lo cual queda clara la
+diferencia en los respectivos gráficos.
 
 \pagebreak
 
-En cuanto a los sonidos percibidos, el mas apagado o neutro es el producido por
-la flauta, mientras que el mas agudo o "afilado" es el producido por el violin,
-el sonido del clarinete es un intermedio entre ambos, un sonido ni muy agudo ni
-muy grave o apagado, y con cierto carácter metálico.
+Cada sonido percibido tiene características diferentes, el mas apagado o neutro
+es el producido por la flauta, mientras que el mas agudo o "afilado" es el
+producido por el violin, el sonido del clarinete es un intermedio entre ambos,
+un sonido ni muy agudo ni muy grave o apagado, y con cierto carácter metálico.
 
 Para el caso del clarinete, cuya señal se puede ver en la figura 11 a
 continuación se puede ver que la onda se parece a una onda cuadrada. En el
@@ -242,13 +249,15 @@ Para la señal producida por la flauta que se puede ver en la figura 12, se pued
 ver que se asemeja a una señal senoidal pura, aunque no tan simétrica en los
 picos, las ondas sinodales en el dominio de frecuencia tienen un único armónico,
 y es el fundamental, es por esto que el sonido es mas neutro y no tan
-"brillante" o agudo.
+"brillante" o agudo dado que la frecuencia es la misma en todos los casos.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../plot/a4_flauta.png}
 \caption{Sonido de flauta}
 \end{figure}
+
+\pagebreak
 
 Por ultimo para para la señal producida por el violin, la cual se puede ver en
 la figura 13, se asemeja a una onda triangular con pendiente decreciente, estas
