@@ -12,6 +12,7 @@ import os
 from scipy.io import wavfile
 
 plot_dir_name = 'plot'
+out_dir_name = 'out'
 
 matplotlib.rcParams['font.family'] = 'Inter'
 matplotlib.rcParams['font.size'] = 12
@@ -20,7 +21,7 @@ matplotlib.rcParams['axes.prop_cycle'] = cycler(
 matplotlib.use("TkAgg")
 
 def ticks_label_format(x, pos):
-    # 3 decimals, strip trailing zeros
+    # 3 decimales, se eliminan los ceros y puntos
     return f"{x:.3f}".rstrip("0").rstrip(".")
 
 def graph_multiple_data(x, y_arr, y_lab, t=0, dt=0, a=0, da=0, show=True):
@@ -44,7 +45,7 @@ def graph_multiple_data(x, y_arr, y_lab, t=0, dt=0, a=0, da=0, show=True):
 
     plt.tight_layout()
 
-    # max 3 decimals
+    # max 3 decimales
     axis.xaxis.set_major_formatter(FuncFormatter(ticks_label_format))
 
     axis.set_xlim([t, t+dt if dt > 0 else x[-1]])
@@ -140,13 +141,16 @@ def save_plot(fig, src_file_path, t_start=0, t_width=0, extra_name=''):
     fig.savefig(fig_file_name, dpi=300, bbox_inches="tight")
 
 def save_convolved_to_wav(convolved, fs, file_path):
-    # 4️⃣ Normalize to prevent clippin
+    # normalizar para prevenir clipping
     convolved = convolved / np.max(np.abs(convolved))
 
-    # 5️⃣ Convert to 16-bit PCM for WAV
+    # convertir a 16-bit PCM para WAV
     convolved_int16 = np.int16(convolved * 32767)
 
+    # crea carpeta para wavs
+    os.makedirs(out_dir_name, exist_ok=True)
+
+    file_path = f'{out_dir_name}/{file_path}'
     print(f'- "{file_path}"')
-    # 6️⃣ Save to WAV
     wavfile.write(file_path, fs, convolved_int16)
 

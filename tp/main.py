@@ -35,8 +35,8 @@ plot(file1_fs, file1_data, file1_path,
 file1_filter1_output = np.convolve(file1_data, filter1_h, mode='same')
 file1_filter2_output = np.convolve(file1_data, filter2_h, mode='same')
 
-save_convolved_to_wav(file1_filter1_output, file1_fs, "out/file1_filter1_output.wav")
-save_convolved_to_wav(file1_filter2_output, file1_fs, "out/file1_filter2_output.wav")
+save_convolved_to_wav(file1_filter1_output, file1_fs, "file1_filter1_output.wav")
+save_convolved_to_wav(file1_filter2_output, file1_fs, "file1_filter2_output.wav")
 
 # fig, ax = plot(file1_fs, file1_filter1_output)
 # save_plot(fig, file1_path, extra_name="_filter1_output")
@@ -72,8 +72,8 @@ plot(file2_fs, file2_data, file2_path, t_start=26.570, t_width=0.01)
 file2_filter1_output = np.convolve(file2_data, filter1_h, mode='same')
 file2_filter2_output = np.convolve(file2_data, filter2_h, mode='same')
 
-save_convolved_to_wav(file2_filter1_output, file2_fs, "out/file2_filter1_output.wav")
-save_convolved_to_wav(file2_filter2_output, file2_fs, "out/file2_filter2_output.wav")
+save_convolved_to_wav(file2_filter1_output, file2_fs, "file2_filter1_output.wav")
+save_convolved_to_wav(file2_filter2_output, file2_fs, "file2_filter2_output.wav")
 
 # fig, ax = plot(file2_fs, file2_filter1_output, t_start=6)
 # save_plot(fig, file2_path, t_start=6, extra_name="_filter1_output")
