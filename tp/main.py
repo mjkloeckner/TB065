@@ -8,6 +8,10 @@ file2_path          = 'data/cancion2.wav'
 filter1_h_file_path = 'data/respuesta_impulso_1.txt'
 filter2_h_file_path = 'data/respuesta_impulso_2.txt'
 
+a4_flauta_file_path    = 'data/a4_flauta.wav'
+a4_clarinete_file_path = 'data/a4_clarinete.wav'
+a4_violin_file_path    = 'data/a4_violin.wav'
+
 file1_fs, file1_data = wavfile.read(file1_path)
 file2_fs, file2_data = wavfile.read(file2_path)
 
@@ -31,8 +35,8 @@ plot(file1_fs, file1_data, file1_path,
 file1_filter1_output = np.convolve(file1_data, filter1_h, mode='same')
 file1_filter2_output = np.convolve(file1_data, filter2_h, mode='same')
 
-save_convolved_to_wav(file1_filter1_output, file1_fs, "file1_filter1_output.wav")
-save_convolved_to_wav(file1_filter2_output, file1_fs, "file1_filter2_output.wav")
+save_convolved_to_wav(file1_filter1_output, file1_fs, "out/file1_filter1_output.wav")
+save_convolved_to_wav(file1_filter2_output, file1_fs, "out/file1_filter2_output.wav")
 
 # fig, ax = plot(file1_fs, file1_filter1_output)
 # save_plot(fig, file1_path, extra_name="_filter1_output")
@@ -68,8 +72,8 @@ plot(file2_fs, file2_data, file2_path, t_start=26.570, t_width=0.01)
 file2_filter1_output = np.convolve(file2_data, filter1_h, mode='same')
 file2_filter2_output = np.convolve(file2_data, filter2_h, mode='same')
 
-save_convolved_to_wav(file2_filter1_output, file2_fs, "file2_filter1_output.wav")
-save_convolved_to_wav(file2_filter2_output, file2_fs, "file2_filter2_output.wav")
+save_convolved_to_wav(file2_filter1_output, file2_fs, "out/file2_filter1_output.wav")
+save_convolved_to_wav(file2_filter2_output, file2_fs, "out/file2_filter2_output.wav")
 
 # fig, ax = plot(file2_fs, file2_filter1_output, t_start=6)
 # save_plot(fig, file2_path, t_start=6, extra_name="_filter1_output")
@@ -91,4 +95,17 @@ leg_arr = ['Señal original', 'Señal filtrada']
 fig, ax = plot_multiple(file2_fs, data_arr, leg_arr, t=6)
 save_plot(fig, file2_path, t_start=6, extra_name="_filter2_output_compare")
 
+# Sonido de instrumentos musicales
+a4_flauta_fs, a4_flauta_data = wavfile.read(a4_flauta_file_path)
+a4_clarinete_fs, a4_clarinete_data = wavfile.read(a4_clarinete_file_path)
+a4_violin_fs, a4_violin_data = wavfile.read(a4_violin_file_path)
 
+## grafico de los instrumentos musicales
+fig, ax = plot(a4_flauta_fs, a4_flauta_data, t_start=0.25, t_width=0.010)
+save_plot(fig, a4_flauta_file_path)
+
+fig, ax = plot(a4_clarinete_fs, a4_clarinete_data, t_start=0.25, t_width=0.010)
+save_plot(fig, a4_clarinete_file_path)
+
+fig, ax = plot(a4_violin_fs, a4_violin_data, t_start=0.25, t_width=0.010)
+save_plot(fig, a4_violin_file_path)
