@@ -138,7 +138,7 @@ def save_plot(fig, src_file_path, t_start=0, t_width=0, extra_name=''):
 
      # crea carpeta para plots
     os.makedirs(plot_dir_name, exist_ok=True)
-    fig.savefig(fig_file_name, dpi=300, bbox_inches="tight")
+    fig.savefig(fig_file_name, dpi=500, bbox_inches="tight")
 
 def save_convolved_to_wav(convolved, fs, file_path):
     # normalizar para prevenir clipping

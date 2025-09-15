@@ -13,9 +13,9 @@ Ernesto Dei Castelli - [edei@fi.uba.ar](mailto:edei@fi.uba.ar)
 En el presente trabajo se realiza un análisis en el dominio temporal de en
 principio dos señales musicales de muestra, en las cuales se buscan porciones
 cuasi-periódicas y no periódicas, y se luego se filtran utilizando dos filtros
-diferentes. Por ultimo, se generan mediante simulación de tres instrumentos
-musicales diferentes, tres señales, las cuales se analiza su forma en el dominio
-temporal.
+diferentes.  Por ultimo, se generan mediante simulación de tres instrumentos
+musicales diferentes, tres señales, las cuales se analizan y comparan las formas
+de onda generadas.
 
 ## Primer muestra
 
