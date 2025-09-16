@@ -12,9 +12,10 @@ Ernesto Dei Castelli - [edei@fi.uba.ar](mailto:edei@fi.uba.ar)
 
 En el presente trabajo se realiza un análisis en el dominio temporal de en
 principio dos señales musicales de muestra, en las cuales se buscan porciones
-cuasi-periódicas y no periódicas, luego se filtran utilizando dos filtros
-diferentes. Por ultimo, se generan mediante simulación de tres instrumentos
-musicales diferentes, tres señales, las cuales solo se analiza y compara la
+cuasi-periódicas y no periódicas, y se luego se filtran utilizando dos filtros
+diferentes.  Por ultimo, se generan mediante simulación de tres instrumentos
+musicales diferentes, tres señales, las cuales se analizan y comparan las formas
+de onda generadas.
 
 ## Primer muestra
 
@@ -75,8 +76,8 @@ A diferencia del análisis realizado sobre la primer muestra en busca de
 secciones cuasi-periódicas, para esta segunda muestra se buscan secciones no
 periódicas, esto es, secciones donde la señal no tiene un patron repetitivo
 marcado. Se toman dos intervalos en los cuales la señal de muestra se
-comporta como tal, el intervalo de $14.72$s a $14.73$s y el intervalo $26.57$s a
-$26.58$s, ambos intervalos se muestran graficados en las figura 5 y 6
+comporta como tal, el intervalo de $14.72$ s a $14.73$ s y el intervalo $26.57$ s a
+$26.58$ s, ambos intervalos se muestran graficados en las figura 5 y 6
 respectivamente.
 
 ![Sección no periódica archivo 'cancion2.wav'](../plot/cancion2_14_72s_a_14_73s.png)
