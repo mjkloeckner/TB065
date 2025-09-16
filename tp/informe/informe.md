@@ -76,8 +76,8 @@ A diferencia del análisis realizado sobre la primer muestra en busca de
 secciones cuasi-periódicas, para esta segunda muestra se buscan secciones no
 periódicas, esto es, secciones donde la señal no tiene un patron repetitivo
 marcado. Se toman dos intervalos en los cuales la señal de muestra se
-comporta como tal, el intervalo de $14.72$s a $14.73$s y el intervalo $26.57$s a
-$26.58$s, ambos intervalos se muestran graficados en las figura 5 y 6
+comporta como tal, el intervalo de $14.72$ s a $14.73$ s y el intervalo $26.57$ s a
+$26.58$ s, ambos intervalos se muestran graficados en las figura 5 y 6
 respectivamente.
 
 ![Sección no periódica archivo 'cancion2.wav'](../plot/cancion2_14_72s_a_14_73s.png)
