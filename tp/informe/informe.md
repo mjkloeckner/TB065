@@ -60,7 +60,7 @@ frecuencia disminuye y también la nota musical.
 
 Utilizando el mismo script de python utilizado para la primer muestra (archivo
 `cancion1.wav`) se gráfica la señal de la segunda muestra (correspondiente al
-archivo `cancino2.wav`) en el dominio temporal, en este caso se gráfica a partir
+archivo `cancion2.wav`) en el dominio temporal, en este caso se gráfica a partir
 del segundo 6 ya que antes de esto la señal tiene amplitud nula, con lo cual no
 aporta información significativa, el gráfico resultante se muestra en la figura
 4.
