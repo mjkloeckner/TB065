@@ -55,7 +55,7 @@ def graph_multiple_data(x, y_arr, y_lab, t=0, dt=0, a=0, da=0, show=True):
     axis.axvspan(a, a+da, color='skyblue',
                  alpha=0 if a == 0 else 0.50,
                  label=f"Un periodo T={da}s" if da != 0 else "")
-    axis.legend()
+    axis.legend(loc='upper left')
 
     if show:
         plt.show()
@@ -87,7 +87,7 @@ def graph_data(x, y, t=0, dt=0, a=0, da=0, show=True):
 
     plt.tight_layout()
 
-    # max 3 decimals
+    # max 3 decimales
     axis.xaxis.set_major_formatter(FuncFormatter(ticks_label_format))
 
     axis.set_xlim([t, t+dt if dt > 0 else x[-1]])
@@ -97,7 +97,7 @@ def graph_data(x, y, t=0, dt=0, a=0, da=0, show=True):
     axis.axvspan(a, a+da, color='skyblue',
                  alpha=0 if a == 0 else 0.50,
                  label=f"Un periodo T={da}s" if da != 0 else "")
-    axis.legend()
+    axis.legend(loc='upper left')
 
     if show:
         plt.show()
