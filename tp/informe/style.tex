@@ -22,11 +22,11 @@
 \definecolor{bgcolor}{HTML}{ffffff}
 \let\oldtexttt\texttt
 
-\setlength{\fboxsep}{-2pt}  % grosor del borde
-\setlength{\fboxrule}{-2pt} % grosor del borde
+\setlength{\fboxsep}{0pt} % padding
+\setlength{\fboxrule}{0pt} % grosor del borde
 
 \renewcommand{\texttt}[1]{
-	\colorbox{bgcolor}{\oldtexttt{#1}}
+	\colorbox{bgcolor}{\hspace{0pt}\oldtexttt{#1}\hspace{-2pt}}
 }
 
 % change boldfont bold to extrabold
