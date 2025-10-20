@@ -25,7 +25,7 @@ def ticks_label_format(x, pos):
     return f"{x:.3f}".rstrip("0").rstrip(".")
 
 def graph_multiple_data(x, y_arr, y_lab, t=0, dt=0, a=0, da=0, show=True):
-    figure, axis = plt.subplots(figsize=(5, 4))
+    figure, axis = plt.subplots(figsize=(8, 4))
 
     for i, y in enumerate(y_arr):
         axis.plot(x, y, label=y_lab[i], alpha=0.75)
@@ -69,7 +69,7 @@ def plot_multiple(fs, data_arr, leg_arr, t=0, dt=0, a=0, da=0):
     return fig, ax
 
 def graph_data(x, y, t=0, dt=0, a=0, da=0, show=True):
-    figure, axis = plt.subplots(figsize=(5, 4))
+    figure, axis = plt.subplots(figsize=(8, 4))
 
     axis.plot(x, y, label='Señal de audio')
     axis.set(xlabel='Tiempo [s]', ylabel='Amplitud normalizada')
@@ -138,7 +138,7 @@ def save_plot(fig, src_file_path, t_start=0, t_width=0, extra_name=''):
 
      # crea carpeta para plots
     os.makedirs(plot_dir_name, exist_ok=True)
-    fig.savefig(fig_file_name, dpi=500, bbox_inches="tight")
+    fig.savefig(fig_file_name, dpi=100, bbox_inches="tight")
 
 def save_convolved_to_wav(convolved, fs, file_path):
     # normalizar para prevenir clipping
