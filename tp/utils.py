@@ -10,6 +10,8 @@ import numpy as np
 import os
 
 from scipy.io import wavfile
+from scipy.fft import fft, fftfreq
+from scipy.signal import spectrogram
 
 plot_dir_name = 'plot'
 out_dir_name = 'out'
@@ -24,7 +26,7 @@ def ticks_label_format(x, pos):
     # 3 decimales, se eliminan los ceros y puntos
     return f"{x:.3f}".rstrip("0").rstrip(".")
 
-def graph_multiple_data(x, y_arr, y_lab, t=0, dt=0, a=0, da=0, show=True):
+def time_graph_multiple_data(x, y_arr, y_lab, t=0, dt=0, a=0, da=0, show=True):
     figure, axis = plt.subplots(figsize=(8, 4))
 
     for i, y in enumerate(y_arr):
@@ -63,12 +65,16 @@ def graph_multiple_data(x, y_arr, y_lab, t=0, dt=0, a=0, da=0, show=True):
     return figure, axis
 
 # todos deben la misma cantidad de elementos que el primero
-def plot_multiple(fs, data_arr, leg_arr, t=0, dt=0, a=0, da=0):
+def time_plot_multiple(fs, data_arr, leg_arr, save_name="", t=0, dt=0, a=0, da=0, show=False):
     x = np.arange(len(data_arr[0])) / fs
-    fig, ax = graph_multiple_data(x, data_arr, leg_arr, t=t, dt=dt, a=a, da=da, show=False)
+    fig, ax = time_graph_multiple_data(x, data_arr, leg_arr, t=t, dt=dt, a=a, da=da, show=show)
+
+    if show == False:
+        save_plot(fig, "cancion1_filter1_output_compare.png")
+
     return fig, ax
 
-def graph_data(x, y, t=0, dt=0, a=0, da=0, show=True):
+def time_graph_data(x, y, t=0, dt=0, a=0, da=0, show=True):
     figure, axis = plt.subplots(figsize=(8, 4))
 
     axis.plot(x, y, label='Señal de audio')
@@ -109,36 +115,36 @@ def normalize(data):
     data /= np.max(np.abs(data))
     return data
 
-def plot(fs, data, file_path="", t_start=0, t_width=0, a=0, da=0):
+def time_plot(fs, data, save_name="", t_start=0, t_width=0, a=0, da=0):
     # normaliza la amplitud dividiendo por el valor maximo del tipo de dato
     data = normalize(data)
 
     t = np.arange(len(data)) / fs
-    fig, ax = graph_data(t, data, t=t_start, dt=t_width, a=a, da=da, show=False)
+    fig, ax = time_graph_data(t, data, t=t_start, dt=t_width, a=a, da=da, show=False)
 
-    if file_path != "":
-        save_plot(fig, file_path, t_start=t_start, t_width=t_width)
+    if save_name != "":
+        save_plot(fig, save_name)
 
     return fig, ax
 
-def save_plot(fig, src_file_path, t_start=0, t_width=0, extra_name=''):
-    basename = os.path.basename(src_file_path)
-    file_name, ext = os.path.splitext(basename)
-    fig_file_name = f'{plot_dir_name}/{file_name}'
+def save_plot(fig, name):
+    base_name = os.path.basename(name)
+    file_name, ext = os.path.splitext(base_name)
+    file_path_no_ext = f'{plot_dir_name}/{file_name}'
 
-    if t_start != 0:
-        fig_name_append_1 = f'_{t_start}s'
-        fig_name_append_2 = f'_a_{round(t_start + t_width, 3)}s' if t_width != 0 else ''
-        fig_file_name += fig_name_append_1.replace('.', '_')
-        fig_file_name += fig_name_append_2.replace('.', '_')
+    save_name = f'{file_path_no_ext}.png'
+    # if os.path.exists(save_name):
+    #     i = 0
+    #     while os.path.exists(f'{file_path_no_ext}_{i}.png'):
+    #         i += 1
 
-    fig_file_name += extra_name
+    #     save_name = f'{file_path_no_ext}_{i}.png'
 
-    print(f'- "{fig_file_name}.png"')
-
+    print(f'- "{save_name}"')
      # crea carpeta para plots
     os.makedirs(plot_dir_name, exist_ok=True)
-    fig.savefig(fig_file_name, dpi=100, bbox_inches="tight")
+    fig.savefig(save_name, dpi=500, bbox_inches="tight")
+    plt.close(fig) # liberar memoria
 
 def save_convolved_to_wav(convolved, fs, file_path):
     # normalizar para prevenir clipping
@@ -154,3 +160,97 @@ def save_convolved_to_wav(convolved, fs, file_path):
     print(f'- "{file_path}"')
     wavfile.write(file_path, fs, convolved_int16)
 
+# frecuencia
+
+def freq_graph_data(x, y, f_min=0, f_max=0, y_min=0, y_max=0, show=True, save_path=""):
+    fig, axis = plt.subplots(figsize=(8, 4))
+
+    axis.plot(x, y, label='Señal de audio')
+    axis.set(xlabel='Frecuencia [Hz]', ylabel='Magnitud normalizada')
+
+    axis.minorticks_on()
+    axis.grid(True, which='major', color='black', linestyle=':', linewidth=1.00)
+    axis.grid(True, which='minor', color='black', linestyle=':', linewidth=0.50)
+
+    # configuracion de ticks del eje x
+    axis.xaxis.set_major_locator(MaxNLocator(nbins=5))
+    axis.xaxis.set_minor_locator(AutoMinorLocator(5))
+
+    axis.yaxis.set_major_locator(MaxNLocator(nbins=5))
+    axis.yaxis.set_minor_locator(AutoMinorLocator(4))
+
+    plt.tight_layout()
+
+    # max 3 decimales
+    axis.xaxis.set_major_formatter(FuncFormatter(ticks_label_format))
+
+    axis.set_xlim([f_min, f_max if f_max != 0 else 20000])
+    axis.set_ylim([y_min, y_max if y_max != 0 else 1.05*max(y)])
+
+    if show:
+        plt.show()
+
+    return fig, axis
+
+# hace la transformacion a frecuencias y pasa lo transformado a `freq_graph_data`
+def freq_plot(fs, data, save_name="", f_min=0, f_max=0, y_min=0, y_max=0,
+              t=0, dt=0, a=0, da=0):
+
+    i = 0
+    di = fs*len(data)
+    if t != 0 or dt != 0:
+        i = int(t*fs)
+        di = int((t+dt)*fs)
+
+    interval_data = data[i:di]
+    N = len(interval_data)
+    interval_fft = fft(interval_data)
+    interval_freqs = fftfreq(N, d=1/fs)
+
+    # se toma la parte positiva en ambos casos (primer parte del arreglo)
+    x = interval_freqs[:N // 2]
+    y = np.abs(interval_fft[:N // 2])
+
+    fig, ax = freq_graph_data(x, y, f_min, f_max, y_min, y_max, show=False)
+
+    if save_name != "":
+        save_plot(fig, save_name)
+
+    return fig, ax
+
+
+from datetime import datetime
+
+def spectogram_plot(fs, data, save_name="", t=0, dt=0, xlim=[], ylim=[], show=False):
+    if dt == 0:
+        dt = (len(data)/fs)-t
+
+    i = int(t*fs)
+    di = int((t+dt)*fs)
+    interval_data = data[i:di]
+
+    f, time, Sxx = spectrogram(interval_data, fs=fs, nperseg=4096, noverlap=32)
+    fig, axis = plt.subplots(figsize=(8, 4))
+
+    plt.pcolormesh(time, f, Sxx**0.10, shading='gouraud')
+    plt.ylabel('Frecuencia [Hz]')
+    plt.xlabel('Tiempo [s]')
+
+    if len(xlim) != 0:
+        plt.xlim(xlim)
+
+    if len(ylim) != 0:
+        plt.ylim(ylim)
+    else:
+        plt.ylim(1, 20000)
+
+    if show == True:
+        plt.show()
+    else:
+        if save_name == "":
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            save_name = f"spectogram_{timestamp}"
+
+        save_plot(fig, save_name)
+
+    return fig, axis
