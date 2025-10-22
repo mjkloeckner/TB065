@@ -140,10 +140,10 @@ def save_plot(fig, name):
 
     #     save_name = f'{file_path_no_ext}_{i}.png'
 
-    print(f'- "{save_name}"')
+    print(f'"{save_name}"')
      # crea carpeta para plots
     os.makedirs(plot_dir_name, exist_ok=True)
-    fig.savefig(save_name, dpi=500, bbox_inches="tight")
+    fig.savefig(save_name, dpi=200, bbox_inches="tight")
     plt.close(fig) # liberar memoria
 
 def save_convolved_to_wav(convolved, fs, file_path):
@@ -157,7 +157,7 @@ def save_convolved_to_wav(convolved, fs, file_path):
     os.makedirs(out_dir_name, exist_ok=True)
 
     file_path = f'{out_dir_name}/{file_path}'
-    print(f'- "{file_path}"')
+    print(f'"{file_path}"')
     wavfile.write(file_path, fs, convolved_int16)
 
 # frecuencia
@@ -165,8 +165,8 @@ def save_convolved_to_wav(convolved, fs, file_path):
 def freq_graph_data(x, y, f_min=0, f_max=0, y_min=0, y_max=0, show=True, save_path=""):
     fig, axis = plt.subplots(figsize=(8, 4))
 
-    axis.plot(x, y, label='Señal de audio')
-    axis.set(xlabel='Frecuencia [Hz]', ylabel='Magnitud normalizada')
+    axis.plot(x, y)
+    axis.set(xlabel='Frecuencia [Hz]', ylabel='Magnitud')
 
     axis.minorticks_on()
     axis.grid(True, which='major', color='black', linestyle=':', linewidth=1.00)
@@ -219,9 +219,7 @@ def freq_plot(fs, data, save_name="", f_min=0, f_max=0, y_min=0, y_max=0,
     return fig, ax
 
 
-from datetime import datetime
-
-def spectogram_plot(fs, data, save_name="", t=0, dt=0, xlim=[], ylim=[], show=False):
+def spectogram_plot(fs, data, save_name="", t=0, dt=0, N=1024, overlp=16, win='hann', xlim=[], ylim=[], show=False):
     if dt == 0:
         dt = (len(data)/fs)-t
 
@@ -229,10 +227,15 @@ def spectogram_plot(fs, data, save_name="", t=0, dt=0, xlim=[], ylim=[], show=Fa
     di = int((t+dt)*fs)
     interval_data = data[i:di]
 
-    f, time, Sxx = spectrogram(interval_data, fs=fs, nperseg=4096, noverlap=32)
+    # `nperseg`  tamaño de ventana (número de muestras por segmento)
+    # `noverlap` cantidad de solapamiento entre ventanas
+    f, time, Sxx = spectrogram(interval_data, fs=fs, nperseg=N, noverlap=overlp,
+                               window=win)
     fig, axis = plt.subplots(figsize=(8, 4))
 
-    plt.pcolormesh(time, f, Sxx**0.10, shading='gouraud')
+    # plt.pcolormesh(time, f, Sxx**0.10, shading='gouraud')
+    plt.pcolormesh(time, f, 10*np.log10(Sxx + 1e-12), shading='gouraud')
+
     plt.ylabel('Frecuencia [Hz]')
     plt.xlabel('Tiempo [s]')
 
@@ -247,10 +250,6 @@ def spectogram_plot(fs, data, save_name="", t=0, dt=0, xlim=[], ylim=[], show=Fa
     if show == True:
         plt.show()
     else:
-        if save_name == "":
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            save_name = f"spectogram_{timestamp}"
-
         save_plot(fig, save_name)
 
     return fig, axis
