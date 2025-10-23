@@ -67,10 +67,10 @@ def time_graph_multiple_data(x, y_arr, y_lab, t=0, dt=0, a=0, da=0, show=True):
 # todos deben la misma cantidad de elementos que el primero
 def time_plot_multiple(fs, data_arr, leg_arr, save_name="", t=0, dt=0, a=0, da=0, show=False):
     x = np.arange(len(data_arr[0])) / fs
-    fig, ax = time_graph_multiple_data(x, data_arr, leg_arr, t=t, dt=dt, a=a, da=da, show=show)
+    fig, ax = time_graph_multiple_data(x, data_arr, leg_arr, t, dt, a=a, da=da, show=show)
 
     if show == False:
-        save_plot(fig, "cancion1_filter1_output_compare.png")
+        save_plot(fig, save_name)
 
     return fig, ax
 
@@ -96,7 +96,7 @@ def time_graph_data(x, y, t=0, dt=0, a=0, da=0, show=True):
     # max 3 decimales
     axis.xaxis.set_major_formatter(FuncFormatter(ticks_label_format))
 
-    axis.set_xlim([t, t+dt if dt > 0 else x[-1]])
+    axis.set_xlim(t, t+dt if dt > 0 else x[-1])
     axis.set_ylim(-1.1, 1.1)
 
     # resaltado de parte de la señal (solo si a != 0)
@@ -115,12 +115,12 @@ def normalize(data):
     data /= np.max(np.abs(data))
     return data
 
-def time_plot(fs, data, save_name="", t_start=0, t_width=0, a=0, da=0):
+def time_plot(fs, data, save_name="", t=0, dt=0, a=0, da=0):
     # normaliza la amplitud dividiendo por el valor maximo del tipo de dato
     data = normalize(data)
 
-    t = np.arange(len(data)) / fs
-    fig, ax = time_graph_data(t, data, t=t_start, dt=t_width, a=a, da=da, show=False)
+    x = np.arange(len(data)) / fs
+    fig, ax = time_graph_data(x, data, t, dt, a, da, False)
 
     if save_name != "":
         save_plot(fig, save_name)
@@ -133,17 +133,11 @@ def save_plot(fig, name):
     file_path_no_ext = f'{plot_dir_name}/{file_name}'
 
     save_name = f'{file_path_no_ext}.png'
-    # if os.path.exists(save_name):
-    #     i = 0
-    #     while os.path.exists(f'{file_path_no_ext}_{i}.png'):
-    #         i += 1
+    print(save_name)
 
-    #     save_name = f'{file_path_no_ext}_{i}.png'
-
-    print(f'"{save_name}"')
      # crea carpeta para plots
     os.makedirs(plot_dir_name, exist_ok=True)
-    fig.savefig(save_name, dpi=200, bbox_inches="tight")
+    fig.savefig(save_name, dpi=250, bbox_inches="tight")
     plt.close(fig) # liberar memoria
 
 def save_convolved_to_wav(convolved, fs, file_path):
@@ -157,7 +151,7 @@ def save_convolved_to_wav(convolved, fs, file_path):
     os.makedirs(out_dir_name, exist_ok=True)
 
     file_path = f'{out_dir_name}/{file_path}'
-    print(f'"{file_path}"')
+    print(file_path)
     wavfile.write(file_path, fs, convolved_int16)
 
 # frecuencia
