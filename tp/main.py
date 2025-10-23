@@ -120,10 +120,16 @@ def freq_domain():
     freq_plot(48000, filter1_h, "filter1_h_fft", f_max=2000)
     freq_plot(48000, filter2_h, "filter2_h_fft", f_max=8000)
 
+    # Formas de ventana
+    # 'boxcar': rectangular
+    # 'bartlett': triangular
+    # https://en.wikipedia.org/wiki/Window_function
+
     for i in [512, 1024, 2048, 4096]:
-        for window in ['hann', 'hamming', 'blackman']:
+        for window in ['boxcar', 'bartlett', 'hann', 'hamming']:
             spectogram_plot(file1_fs, file1_data, f"cancion1_espectograma_{window}_{i:04d}", N=i, win=window)
-            spectogram_plot(file2_fs, file2_data, f"cancion2_espectograma_{window}_{i:04d}", t=6, N=i, win=window)
+            spectogram_plot(file2_fs, file2_data,
+                            f"cancion2_espectograma_{window}_{i:04d}", t=6, N=i, win=window, ylim=[0, 8000])
 
 time_domain()
 freq_domain()
