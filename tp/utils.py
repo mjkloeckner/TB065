@@ -137,7 +137,7 @@ def save_plot(fig, name):
 
      # crea carpeta para plots
     os.makedirs(plot_dir_name, exist_ok=True)
-    fig.savefig(save_name, dpi=250, bbox_inches="tight")
+    fig.savefig(save_name, dpi=200, bbox_inches="tight")
     plt.close(fig) # liberar memoria
 
 def save_convolved_to_wav(convolved, fs, file_path):
