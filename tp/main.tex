@@ -288,8 +288,6 @@ que realiza una leve atenuación de toda la señal. Analizando en detalle como s
 \label{cancion1_filter2_output_compare_0_248_a_0_256}
 \end{figure}
 
-\pagebreak
-
 De manera análoga para la segunda muestra se aplican los filtros mediante la
 convolución entre la señal y la respuesta al impulso del respectivo filtro.
 
@@ -364,7 +362,7 @@ Se generaron tres muestras diferentes a las ya utilizadas, correspondientes con
 la nota \emph{A4} (La4, \(440\) Hz) mediante la simulación de tres instrumentos
 musicales distintos: un clarinete, una flauta y un violín. Las señales generadas
 corresponden con los archivos a4\_clarinete.wav, a4\_flauta.wav y a4\_violin.wav
-y los gráficos de cada señal se muestran en las figuras 11, 12 y 13,
+y los gráficos de cada señal se muestran en las figuras \ref{a4_clarinete_cutoff_time_comparison}, \ref{a4_clarinete_cutoff_time_comparison} y \ref{a4_violin_cutoff_time_comparison}
 respectivamente.
 
 Si bien todos los sonidos tienen la misma frecuencia, ya que es la misma
@@ -378,45 +376,42 @@ neutro es el producido por la flauta, mientras que el mas agudo o
 intermedio entre ambos, un sonido ni muy agudo ni muy grave o apagado, y
 con cierto carácter metálico.
 
-Para el caso del clarinete, cuya señal se puede ver en la figura 11 a
-continuación se puede ver que la onda se parece a una onda cuadrada. En
-el dominio de frecuencia, las ondas cuadradas ideales se componen de
-armónicos impares.
+Para el caso del clarinete, cuya señal se puede ver en la figura \ref{a4_clarinete_cutoff_time_comparison}, se puede ver que la onda se parece a una onda cuadrada. En el dominio de frecuencia, las ondas cuadradas ideales se componen de armónicos impares.
 
-\begin{figure}
-\centering
-\includegraphics{plot/a4_clarinete.png}
-\caption{Sonido de clarinete}
-\label{a4_clarinete}
-\end{figure}
+%\begin{figure}
+%\centering
+%\includegraphics{plot/a4_clarinete.png}
+%\caption{Sonido de clarinete}
+%\label{a4_clarinete}
+%\end{figure}
 
-Para la señal producida por la flauta que se puede ver en la figura 12,
+Para la señal producida por la flauta que se puede ver en la figura \ref{a4_clarinete_cutoff_time_comparison},
 se puede ver que se asemeja a una señal senoidal pura, aunque no tan
 simétrica en los picos, las ondas sinodales en el dominio de frecuencia
 tienen un único armónico, y es el fundamental, es por esto que el sonido
 es mas neutro y no tan ``brillante'' o agudo dado que la frecuencia es
 la misma en todos los casos.
 
-\begin{figure}
-\centering
-\includegraphics{plot/a4_flauta.png}
-\caption{Sonido de flauta}
-\label{a4_flauta}
-\end{figure}
+%\begin{figure}
+%\centering
+%\includegraphics{plot/a4_flauta.png}
+%\caption{Sonido de flauta}
+%\label{a4_flauta}
+%\end{figure}
 
 Por ultimo para la señal producida por el violín, la cual se puede ver
-en la figura 13, se asemeja a una onda triangular con pendiente
+en la figura \ref{a4_violin_cutoff_time_comparison}, se asemeja a una onda triangular con pendiente
 decreciente, estas ondas triangulares en el dominio de frecuencia
 también tienen armónicos impares como la onda cuadrada, pero estos
 armónicos tienen mayor amplitud, es por esto que si bien tienen un
 sonido similar, el sonido del violín es mas agudo.
 
-\begin{figure}
-\centering
-\includegraphics{plot/a4_violin.png}
-\caption{Sonido de violín}
-\label{a4_violin}
-\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics{plot/a4_violin.png}
+%\caption{Sonido de violín}
+%\label{a4_violin}
+%\end{figure}
 
 
 
@@ -425,6 +420,7 @@ sonido similar, el sonido del violín es mas agudo.
 
 
 
+\pagebreak
 
 \hypertarget{Dominio-de-frecuencia}{%
 \section{Dominio de frecuencia}\label{dominio-de-frecuencia}}
@@ -459,9 +455,9 @@ no periódicas.
 \end{figure}
 
 \hypertarget{filtrado}{%
-\subsection{Filtrado}\label{filtrado}}
+\subsection{Filtrado en frecuencia}\label{filtrado}}
 
-A continuación se utilizaron las señales filtradas obtenidas en la primera parte y se graficaron sus espectros en frecuencia, como se puede observar en las figuras \ref{cancion1_filter1_output_fft}, \ref{cancion1_filter2_output_fft}, \ref{cancion2_filter1_output_fft} y \ref{cancion2_filter2_output_fft}. Los gráficos \ref{filter1_h_fft} y \ref{filter2_h_fft} corresponden a las transformadas de Fourier de los filtros utilizados anteriormente.
+A continuación se utilizaron las señales filtradas obtenidas en la primera parte para las muestras de los archivos `cancion1.wav' y `cancion2.wav' y se graficaron sus espectros en frecuencia, como se puede observar en las figuras \ref{cancion1_filter1_output_fft}, \ref{cancion1_filter2_output_fft}, \ref{cancion2_filter1_output_fft} y \ref{cancion2_filter2_output_fft}. Los gráficos \ref{filter1_h_fft} y \ref{filter2_h_fft} corresponden a las transformadas de Fourier de los filtros utilizados anteriormente.
 
 \begin{figure}[H]
 \centering
@@ -477,7 +473,7 @@ A continuación se utilizaron las señales filtradas obtenidas en la primera par
 \label{filter2_h_fft}
 \end{figure}
 
-Como era de esperarse y como se anticipó en la primera parte, el primer filtro corresponde a un filtro pasa altos mientras que el segundo es un filtro pasa bajos. En el caso del primero deja pasar por completo las frecuencias mayores a 800Hz aproximadamente y atenua en mayor o menor medida las frecuencias restantes, mientras que el segundo deja pasar las frecuencias menores a 4600Hz aproximadamente, atenua por completo las frecuencias mayores a 5600Hz aproximadamente y atenua en mayor o menor medida las que están en el medio.
+Como era de esperarse y como se anticipó en la primera parte, el primer filtro corresponde a un filtro pasa altos mientras que el segundo es un filtro pasa bajos. En el caso del primero deja pasar por completo las frecuencias mayores a 800Hz aproximadamente y atenúa en mayor o menor medida las frecuencias restantes, mientras que el segundo deja pasar las frecuencias menores a 4600Hz aproximadamente, atenúa por completo las frecuencias mayores a 5600Hz aproximadamente y atenúa en mayor o menor medida las que están en el medio.
 
 \begin{figure}[H]
 \centering
@@ -591,15 +587,20 @@ De manera análoga, en las figuras \ref{cancion2_espectograma_boxcar_0512}, \ref
 \hypertarget{espectograma-ventana-triangular}{%
 \subsubsection{Espectrograma con ventana triangular}\label{espectograma-ventana-triangular}}
 
+\iffalse
 A continuación se vuelve a graficar los espectrogramas de las canciones 1 y 2 tomando la misma cantidad de puntos, 512, 1024 y 2048, pero la diferencia siendo que se utiliza una ventana triangular. La diferencia entre ambas ventanas en la practica es que la ventana rectangular tiene mejor resolución en frecuencia ya que su DFT es una función sinc (con la función sinc definida como $sin(\pi\cdot x)/\pi\cdot x$) pero mayor fuga espectral, ya que los lóbulos secundarios de las sinc son mas fuertes que la DFT de la función triangular, que es una sinc pero al cuadrado, lo que hace que los lóbulos secundarios disminuyan. Para la primer muestra las figuras resultantes son \ref{cancion1_espectograma_bartlett_0512}, \ref{cancion1_espectograma_bartlett_1024} y \ref{cancion1_espectograma_bartlett_2048}, para el espectrograma utilizando ventana triangular y tomando 512, 1024 y 2048 puntos respectivamente. Para la segunda muestra, las figuras resultantes son \ref{cancion2_espectograma_bartlett_0512}, \ref{cancion2_espectograma_bartlett_1024} y \ref{cancion2_espectograma_bartlett_2048} para el espectrograma utilizando ventana triangular y tomando 512, 1024 y 2048 puntos respectivamente.
+\fi
+
+En la figura \ref{cancion1_espectograma_bartlett_2048} se muestra el espectrogramas de las canciones 1 tomando 2048 de puntos, pero utilizando una ventana triangular. La diferencia entre utilizar una ventana triangular y una rectangular en la practica es que la ventana rectangular tiene mejor resolución en frecuencia ya que su espectro es una función sinc (con la función sinc definida como $sin(\pi\cdot x)/\pi\cdot x$) pero mayor fuga espectral, ya que los lóbulos secundarios de las sinc son mas fuertes que la del espectro de la función triangular, que es una sinc pero al cuadrado, lo que hace que los lóbulos secundarios disminuyan.
 
 \begin{figure}[H]
 \centering
-\includegraphics{plot/cancion1_espectograma_bartlett_0512.png}
-\caption{Espectrograma primer muestra de ventana triangular de 512 puntos}
-\label{cancion1_espectograma_bartlett_0512}
+\includegraphics{plot/cancion1_espectograma_bartlett_2048.png}
+\caption{Espectrograma primer muestra de ventana triangular de 2048 puntos}
+\label{cancion1_espectograma_bartlett_2048}
 \end{figure}
 
+\iffalse
 \begin{figure}[H]
 \centering
 \includegraphics{plot/cancion1_espectograma_bartlett_1024.png}
@@ -609,9 +610,9 @@ A continuación se vuelve a graficar los espectrogramas de las canciones 1 y 2 t
 
 \begin{figure}[H]
 \centering
-\includegraphics{plot/cancion1_espectograma_bartlett_2048.png}
-\caption{Espectrograma primer muestra de ventana triangular de 2048 puntos}
-\label{cancion1_espectograma_bartlett_2048}
+\includegraphics{plot/cancion1_espectograma_bartlett_0512.png}
+\caption{Espectrograma primer muestra de ventana triangular de 512 puntos}
+\label{cancion1_espectograma_bartlett_0512}
 \end{figure}
 
 \begin{figure}[H]
@@ -634,18 +635,27 @@ A continuación se vuelve a graficar los espectrogramas de las canciones 1 y 2 t
 \caption{Espectrograma segunda muestra de ventana triangular de 2048 puntos}
 \label{cancion2_espectograma_bartlett_2048}
 \end{figure}
+\fi
 
 \hypertarget{espectograma-ventana-hann}{%
 \subsubsection{Espectrograma con ventana de Hann}\label{espectograma-ventana-hann}}
 
-La ventana de Hann es una funcion que en el dominio temporal tiene una forma
+La ventana de Hann es una función que en el dominio temporal tiene una forma
 suave, no como la ventana rectangular o triangular que tiene puntos con derivada
 discontinua, la forma es parecida a medio ciclo de un seno. En el dominio de
 frecuencia, la ventana de Hann tiene una forma parecida a la de la ventana
-rectangular con un lobulo principal, pero este mas ancho que el de la
-rectangular, esto implica menor resolucion en frecuencia; ademas el espectro de
-la ventana de Hann tiene lobulos laterales menores.
+rectangular con un lóbulo principal, pero este mas ancho que el de la
+rectangular, esto implica menor resolución en frecuencia; además el espectro de
+la ventana de Hann tiene lóbulos laterales menores, lo que reduce aum mas la fuga espectral.
 
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion1_espectograma_hann_2048.png}
+\caption{Espectrograma primer muestra con ventana Hann de 2048 puntos}
+\label{cancion1_espectograma_hann_2048}
+\end{figure}
+
+\iffalse
 \begin{figure}[H]
 \centering
 \includegraphics{plot/cancion1_espectograma_hann_0512.png}
@@ -658,13 +668,6 @@ la ventana de Hann tiene lobulos laterales menores.
 \includegraphics{plot/cancion1_espectograma_hann_1024.png}
 \caption{Espectrograma primer muestra con ventana Hann de 1024 puntos}
 \label{cancion1_espectograma_hann_1024}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics{plot/cancion1_espectograma_hann_2048.png}
-\caption{Espectrograma primer muestra con ventana Hann de 2048 puntos}
-\label{cancion1_espectograma_hann_2048}
 \end{figure}
 
 \begin{figure}[H]
@@ -687,25 +690,87 @@ la ventana de Hann tiene lobulos laterales menores.
 \caption{Espectrograma segunda muestra con ventana Hann de 2048 puntos}
 \label{cancion2_espectograma_hann_2048}
 \end{figure}
+\fi
 
-Analizando el espectrograma de la primer canción, en particular el de la figura
-\ref{cancion1_espectograma_bartlett_2048}, en el cual se toman 2048 puntos y se
-utiliza una ventana triangular, se observa claramente las notas que componen la
-melodía, y ademas en que tiempo ocurre cada una de ellas. Ademas se observa que
-no es muy clara la resolución temporal pero de todas maneras se tiene una
-aproximación general de en que tiempo ocurre cada nota, para mayor resolución se
-puede observar u analizar la figura \ref{cancion1_espectograma_bartlett_0512} en
-la cual se toman menos puntos, por lo tanto se tiene mayor resolución temporal.
+Analizando el espectrograma de la primer canción, en particular el de la figura \ref{cancion1_espectograma_bartlett_2048}, en el cual se toman 2048 puntos y se utiliza una ventana triangular, se observa claramente las notas que componen la melodía, y ademas en que tiempo ocurre cada una de ellas. Ademas se observa que no es muy clara la resolución temporal pero de todas maneras se tiene una aproximación general de en que tiempo ocurre cada nota, para mayor resolución se puede analizar en detalle la figura \ref{cancion1_espectograma_boxcar_0512} en la cual se toman menos puntos de ventana (y se utiliza una ventana rectangular) por lo tanto se tiene mayor resolución temporal.
+
+
+
+
+
+
+% PUNTO 5
+\hypertarget{serie-de-fourier-tomando-uno-y-varios-periodos
+}{%
+\subsection{Serie de Fourier tomando uno y varios periodos}\label{serie-de-fourier-tomando-uno-y-varios-periodos
+}}
+
+Para señales musicales de la nota A4 generados generadas en la sección \ref{sonido-de-diferentes-instrumentos} para diferentes instrumentos, mediante un script de python, se analiza el espectro de cada una y se remueven altas frecuencias, intentando preservar el sonido generado pero utilizando menor información para obtener dicho sonido.
+
+En primer lugar, se obtiene la serie de Fourier de cada una de las notas generada por los diferentes instrumentos, utilizando uno y mas periodos, para la generada por el clarinete, se muestra la serie de Fourier utilizando 1, 4 y 8 periodos en la figura \ref{a4_clarinete_fseries_comparison}, para la nota generada por la flauta la serie de Fourier se observar en la figura \ref{a4_flauta_fseries_comparison}, finalmente en la figura \ref{a4_violin_fseries_comparison} ser observa la serie de Fourier para la nota A4 generada por el violín. Se puede ver en todos los casos que tomando mas periodos de la señal se tiene más resolución espectral, y tiene sentido ya que al tomar mas periodos se tiene mas información de la señal.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/a4_clarinete_fseries_comparison.png}
+\caption{Serie de Fourier tomando 1, 4 y 8 periodos nota A4 clarinete}
+\label{a4_clarinete_fseries_comparison}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/a4_flauta_fseries_comparison.png}
+\caption{Serie de Fourier tomando 1, 4 y 8 periodos nota A4 flauta}
+\label{a4_flauta_fseries_comparison}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/a4_violin_fseries_comparison.png}
+\caption{Serie de Fourier tomando 1, 4 y 8 periodos nota A4 violín}
+\label{a4_violin_fseries_comparison}
+\end{figure}
+
+\hypertarget{filtrado-de-muestras}{%
+\subsection{Filtrado de muestras}\label{filtrado-de-muestras}}
+
+Para realizar el filtrado, se eliminan frecuencias mayores a un numero de frecuencia arbitrario, esto es análogo a aplicar un filtro pasa-bajos en la practica, pero mediante procesamiento digital. El numero arbitrario que define que frecuencias se deben eliminar queda determinado por como suena la señal luego de eliminar esas frecuencias mayores. En particular se ha detectado que para la flauta por tener un menor numero de armónicos, como se puede ver en la figura \ref{a4_flauta_fseries_comparison} de su serie de Fourier, este numero arbitrario puede ser tan bajo como 1000 Hz, sin modificar demasiado el sonido de la nota. En el otro extremo se tiene el violín, el cual se ve en su serie de Fourier (figura \ref{a4_violin_fseries_comparison}) que posee un gran numero de armónicos, esto hace que si se eliminan frecuencias bajas se modifica mucho el sonido de la nota. En todos los casos se observa que no se puede `comprimir' demasiado la señal puesto que no poseen armónicos de alta frecuencia, ya de por si son muestras `limpias' que ya poseen un procesamiento digital previo realizado por el programa generador.
+
+Una comparación entre las señal temporal resultante de las notas musicales filtradas y la señal original se muestran en las figuras \ref{a4_violin_cutoff_time_comparison}, \ref{a4_clarinete_cutoff_time_comparison} y \ref{a4_flauta_cutoff_time_comparison}, para la nota filtrada del violín, del clarinete y de la flauta, respectivamente.
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/a4_violin_cutoff_time_comparison.png}
+\caption{Comparación entre señal original y filtrada en tiempo nota A4 vioin}
+\label{a4_violin_cutoff_time_comparison}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/a4_clarinete_cutoff_time_comparison.png}
+\caption{Comparación entre señal original y filtrada en tiempo nota A4 clarinete}
+\label{a4_clarinete_cutoff_time_comparison}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/a4_flauta_cutoff_time_comparison.png}
+\caption{Comparación entre señal original y filtrada en tiempo nota A4 flauta}
+\label{a4_flauta_cutoff_time_comparison}
+\end{figure}
+
+
 
 \hypertarget{Efectos-musicales-en-términos-de-sistemas}{%
 \subsection{Efectos musicales en términos de sistemas}\label{Efectos-musicales-en-términos-de-sistemas}}
 
-En esta sección se analizan distintos efectos interpretándolos como sistemas que procesan la señal de entrada x(t) dando en la salida una señal y(t). 
-Se trabaja con una señal senoidal pura de 440Hz, implementando los efectos de manera digital mediante código. En cada caso se grafican los espectros resultantes de aplicar los distintos efectos a la señal original.
+En esta sección se analizan distintos efectos interpretándolos como sistemas que procesan la señal de entrada $x(t)$ dando en la salida una señal $y(t)$. 
+
+% Se trabaja con una señal senoidal pura de 440Hz, implementando los efectos de manera digital mediante código. En cada caso se grafican los espectros resultantes de aplicar los distintos efectos a la señal original.
 
 \subsubsection{Delay}
 
-El efecto del \textit{delay} consiste en sumar a la señal original una copia de sí misma con un factor de retroalimentación que genera repeticiones. Puede modelarse como:
+El efecto \textit{delay} consiste en sumar a la señal original una copia de sí misma con un factor de retroalimentación que genera repeticiones. Puede modelarse como:
 
 \[
 y[n] = x[n] + \alpha\, y[n - D]
@@ -713,8 +778,9 @@ y[n] = x[n] + \alpha\, y[n - D]
 
 donde $D$ representa el retardo en muestras y $\alpha$ es el coeficiente de retroalimentación.
 
-Analizando las propiedades de este sistema, se observa que es un sistema \textbf{lineal}, posee \textbf{memoria} ya que depende de muestras pasadas, y es \textbf{invariante en el tiempo} debido a que el retardo no cambia a lo largo del tiempo.
+Analizando las propiedades de este sistema, se observa que es un sistema \textbf{lineal}, que posee \textbf{memoria} ya que depende de muestras pasadas, y es \textbf{invariante en el tiempo} debido a que el retardo no cambia a lo largo del tiempo.
 
+\iffalse
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\linewidth]{plot/delay_original.png}
@@ -728,6 +794,7 @@ Analizando las propiedades de este sistema, se observa que es un sistema \textbf
     \caption{Espectro con efecto delay}
     \label{delay_efecto}
 \end{figure}
+\fi
 
 \subsubsection{Distorsión}
 
@@ -740,6 +807,7 @@ y[n] = tanh(Gx[n])
 Este sistema no es lineal ya que su salida no es proporcional a la entrada, es invariante en el tiempo ya que no cambia en el tiempo, y es sin memoria porque cada muestra depende solo de la muestra actual.
 Se observa la aparición de armónicos múltiples de la frecuencia fundamental, dando un tono mas brillante y enriquecido.
 
+\iffalse
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\linewidth]{plot/distorsion_original.png}
@@ -753,6 +821,7 @@ Se observa la aparición de armónicos múltiples de la frecuencia fundamental, 
     \caption{Espectro con efecto distorsión}
     \label{distorsion_efecto}
 \end{figure}
+\fi
 
 \subsubsection{Trémolo}
 
@@ -768,6 +837,7 @@ El sistema implementado es \textbf{lineal}, \textbf{invariante en el tiempo} (si
 
 En el espectro de la señal se pueden observar \textit{bandas laterales} que rodean la frecuencia fundamental, producidas por la modulación en amplitud.
 
+\iffalse
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\linewidth]{plot/trembolo_original.png}
@@ -781,6 +851,7 @@ En el espectro de la señal se pueden observar \textit{bandas laterales} que rod
     \caption{Espectro nota con efecto tremolo}
     \label{trembolo_efecto}
 \end{figure}
+\fi
 
 \subsubsection{Vibrato}
 
@@ -795,6 +866,7 @@ Es \textbf{invariante en el tiempo} (si el modulador es constante) y \textbf{tie
 
 En el espectro se puede apreciar un \textit{ensanchamiento} en la frecuencia fundamental con variaciones periódicas alrededor de la misma, lo que refleja la modulación del tono.
 
+\iffalse
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\linewidth]{plot/vibrato_original.png}
@@ -808,8 +880,9 @@ En el espectro se puede apreciar un \textit{ensanchamiento} en la frecuencia fun
     \caption{Espectro con efecto vibrato}
     \label{vibrato_efecto}
 \end{figure}
+\fi
 
-\subsection*{Chorus}
+\subsubsection{Chorus}
 
 Combina múltiples copias de la señal, cada una con un retardo distinto.  
 Simula varios instrumentos sonando al mismo tiempo.  
@@ -825,7 +898,7 @@ Es un sistema \textbf{no lineal} debido a la interpolación variable,
 En el espectro se observa un \textit{ensanchamiento} alrededor de la frecuencia fundamental  
 y una estructura densa debido a la suma de fuentes sonoras.
 
-
+\iffalse
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\linewidth]{plot/chorus_original.png}
@@ -839,6 +912,7 @@ y una estructura densa debido a la suma de fuentes sonoras.
     \caption{Espectro con efecto chorus}
     \label{chorus_efecto}
 \end{figure}
+\fi
 
 Cada efecto puede interpretarse como un sistema que transforma una señal de entrada aplicando operaciones de retardo, modulación o no linealidad. Los efectos que se caracterizaron como lineales e invariantes en el tiempo (delay y trembolo) modifican el espectro de manera predecible. Mientras que los no lineales introducen componentes que afectan la estructura armónica que se tenía en la señal original
 
