@@ -1,122 +1,147 @@
+\documentclass[12pt]{article}
+\usepackage[spanish]{babel}
+
+\usepackage{natbib}
+\bibliographystyle{apalike}
+
+\usepackage{url}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+\usepackage{vmargin}
+\usepackage[ddmmyy]{datetime}
+\usepackage{anyfontsize}
+\usepackage{helvet}
+\renewcommand{\familydefault}{phv}
+\usepackage{xcolor}
+
+\usepackage{float}
+\usepackage[section]{placeins}
+\usepackage{tocloft}
+
+% Alinear completamente el texto del índice de figuras al margen izquierdo
+\setlength{\cftfigindent}{0pt}     % sin sangría a la izquierda
+\setlength{\cftfignumwidth}{2em}   % ancho reservado para "Figura X"
+
+\usepackage[T1]{fontenc}
+
+\usepackage{arevmath}
+
+% Definir tamaño por defecto para todas las figuras
+\setkeys{Gin}{width=\textwidth, keepaspectratio}
+
+% \setmarginsrb{
+%    left margin,
+%    top margin,
+%    right margin,
+%    bottom margin,
+%    head height,
+%    head sep,
+%    foot height,
+%    foot skip
+% }
+\setmarginsrb{2.5 cm}{2.25 cm}{2.5 cm}{2 cm}
+           {1 cm}{1 cm}{1.25 cm}{1.5 cm}
+
+\setlength{\skip\footins}{20pt}  % default is around 10pt
+
+\usepackage{color}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true, % set true if you want colored links
+    linktoc=all,     % set to all if you want sections and subsections linked
+    linkcolor=blue,  % choose some color if you want links to stand out
+    urlcolor=blue,
+    citecolor=blue
+}
+
+\usepackage{subfig}
+
+\AtBeginEnvironment{align}{
+    \vspace{-1.20em}
+}
+
+\usepackage{fancyvrb}
+\fvset{xleftmargin=\mathindent}
+
+% code blocks
+\usepackage{verbatimbox}
+\newenvironment{fullgrayverb}
+{\verbbox}
+{\endverbbox\par\colorbox{gray!25}{\parbox{\textwidth}{\theverbbox}}\par}
+
+% inline code blocks
+\usepackage{tcolorbox}
+\newcommand\mystrut{\rule[-3pt]{0pt}{12pt}}
+\newtcbox{\code}{on line, boxrule=0pt, boxsep=0pt, top=0pt,
+left=0pt, bottom=0pt, right=0pt, colback=gray!25, colframe=white,
+fontupper={\ttfamily\mystrut}}
+
+\title{Análisis de señales}          % Titulo del trabajo.
+\author{Klöckner, Lema Roveta, Dei Castelli}
+\newcommand{\padron}{123456, 123456}    % Padrón
+\newcommand{\tpnumber}{1}       % Número de trabajo práctico
+\date{\today}                   % Fecha (automática)
+
+\makeatletter
+\let\thetitle\@title
+\let\theauthor\@author
+\let\thedate\@date
+\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\theauthor}
+\lhead{\thetitle}
+\cfoot{\thepage}
+
+\begin{document}
+\begin{titlepage}
+    \vspace*{-2.5cm}
+    {\centering
+    \includegraphics[width=1.00\textwidth]{img/logofiuba.png}\\[2.25 cm]}
+    \centering
+    \textsc{\Large TB065}\\[0.2 cm]
+    \textsc{\large Señales y Sistemas}\\[4 cm]
+    \textcolor{cyan}{{\fontsize{40}{60}\selectfont \bfseries \thetitle}}\\[0.5cm]
+    {\Large \bfseries Trabajo Práctico Especial}\\[5cm]
+
+    \vfill
+    \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}\\[0.5cm]
+    \begin{minipage}{.50\textwidth}
+    \textbf{Integrante}\\
+    Martin Klöckner \\ Mateo Lema Roveta \\ Ernesto Dei Castelli
+    \end{minipage}%
+    \begin{minipage}{.25\textwidth}
+    \textbf{Legajo}\\
+    123456 \\ 
+    123456 \\ 
+    123456
+    \end{minipage}%
+    \begin{minipage}{.25\textwidth}
+     \begin{flushright}
+        \textbf{Correo electrónico}\\
+         \href{mailto:mklockner@fi.uba.ar}{mklockner@fi.uba.ar} \\
+         \href{mailto:mlema@fi.uba.ar}{mlema@fi.uba.ar} \\
+         \href{mailto:edei@fi.uba.ar}{edei@fi.uba.ar}
+    \end{flushright}
+    \end{minipage}
+\end{titlepage}
+
+\setcounter{tocdepth}{2}
+\hypersetup{linkcolor=black} % colorlinks=true option is used
+\tableofcontents
+\listoffigures
 \pagebreak
 
-\hypertarget{caso-practico}{%
-\section{Caso práctico: Identificador de canción}\label{dominio-de-frecuencia}}
+% \include{primera_parte}
 
-En esta parte del trabajo se verá un caso practico de todas las herramientas analizadas en
-secciones previas. El objetivo es implementar una herramienta que analice un sonido
-musical, particularmente una canción en formato digital, e identifique la
-canción basándose en una lista de canciones analizadas previamente.
+% \include{segunda_parte}
 
-\hypertarget{reduccion-de-frecuencia}{%
-\subsection{Reducción de frecuencia}\label{reduccion-de-frecuencia}}
+\include{tercera_parte}
 
-El pre-procesamiento de la señal de audio en formato digital consiste en pasarla a
-canal mono (en caso de que esté en estéreo) y luego sub-muestrearlo, debido a que la
-información útil para la extracción de características se encuentra en bajas
-frecuencias. En general, el audio está muestreado a 44100 Hz, pero para el
-algoritmo a utilizar basta con tenerlo muestreado a 1/8 de su frecuencia
-original, es decir $5512.5$Hz. Esto permite trabajar con menos muestras,
-aliviando la carga computacional.
+\bibliography{referencias}
 
-Para reducir la frecuencia de muestreo de la señal discreta de $44100$Hz a $5512.5$Hz se utiliza un decimador que tome muestras de la señal a intervalos regulares de 8 puntos, de esta forma la señal sub-muestreada $x_{d}$ resulta como en la ecuación \ref{eq-señal-submuestreada}.
-
-\begin{align}
-    x_{d}(n) = x(n\cdot N);\quad N\in \mathbb{Z}
-    \label{eq-señal-submuestreada}
-\end{align}
-
-El diagrama debloques del sistema a utilizar se compone de un filtro pasa-bajos y luego un muestreador o compresor de la señal en dominio temporal como se muestra en la figura \ref{fig-diagrama-de-bloques-decimador}, en la cual $x(n)$ representa la señal de entrada y $x_{d}(n)$ la señal decimada. El filtro pasa-bajos se utiliza para evitar aliasing si la señal de entrada $x_{n}$ no permite decimación en $8$ veces, es decir, tiene ancho de banda mayor a $2\pi/8$ o en frecuencia siendo $5512.5$Hz
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=0.75\linewidth]{img/diagrama_de_bloques-decimador.png}
-    \caption{Diagrama de bloques reducción de frecuencia}
-    \label{fig-diagrama-de-bloques-decimador}
-\end{figure}
-
-Para el filtro pasa-bajos se utiliza un filtro con respuesta al impulso finita (FIR) y frecuencia de corte teórica de $2756.25$Hz la cual corresponde con la frecuencia de Nyquist, la elección de un filtro de tipo FIR, a diferencia de un filtro con respuesta al impulso infinita (IIR), es que es mas fácil la implementación y, si bien requiere un gran poder de computo a diferencia de los filtros IIR, en este caso el poder de computo no es un problema, a diferencia de sistemas embebidas, por dar un ejemplo.
-
-La forma general de un filtro FIR se muestra a continuación en la ecuación \ref{eq-forma-general-fir}, en la cual $M$ representa el grado del filtro, y por consiguiente la cantidad de coeficientes $b_k$, $y(n)$ la salida del filtro y $x(n)$ la entrada.
-
-\begin{align}
-   y(n) = \sum_{k=0}^{M} b_{k}\cdot x(n-k)
-    \label{eq-forma-general-fir}
-\end{align}
-
-Aplicando la transformada Z a la expresión de la ecuación \ref{eq-forma-general-fir} y por propiedades de la transformada resulta como se ve en la ecuación \ref{eq-transferencia-filtro-fir}, $H(z)$ es lo que se denomina la transferencia del sistema en el dominio z.
-
-\begin{align}
-   \dfrac{Y(z)}{X(z)} = H(z) = \sum_{k=0}^{M} b_{k}\cdot z^{-k}
-    \label{eq-transferencia-filtro-fir}
-\end{align}
-
-Aplicando la anti-transformada z a la expresión de de la ecuación \ref{eq-transferencia-filtro-fir} resulta en la respuesta al impulso del filtro FIR que se ve en la ecuación \ref{eq-resp-impulso-filtro-fir}. Otra forma de hallar la respuesta al impulso era tomando $x(n) = \delta(n)$ en la ecuación \ref{eq-forma-general-fir}.
-
-\begin{align}
-   h(n) = \left\{ 
-    \begin{array}{rl}
-   b_{n}\;,\; & \mbox{si} \;\; 0 \leq n \leq M \\
-   0    \;,\; & \mbox{en otro caso}
-   \end{array}
-   \right.
-   \label{eq-resp-impulso-filtro-fir}
-\end{align}
-
-Para hallar los coeficientes $b_{n}$ se utiliza el método de ventana, en el cual se iguala la respuesta al impulso del filtro FIR con la multiplicación de la respuesta al impulso de un filtro ideal con una ventana con forma arbitraria, como se muestra en \ref{eq-ventaneo}.
-
-\begin{align}
-    h(n) = h_{ideal}(n) \cdot w(n)
-    \label{eq-ventaneo}
-\end{align}
-
-Siendo en este caso $h_{ideal}(n)$ la respuesta al impulso del pasa bajos ideal, el cual sabiendo que es un rectángulo en frecuencia, resulta una sinc en el dominio temporal, esto se muestra en la ecuación \ref{eq-imp-pasabajo-ideal}. La multiplicación por una ventana de la ecuación \ref{eq-ventaneo} justamente se hace porque los filtros ideales tienen respuesta al impulso infinita, como es el caso de la función $sinc$.
-
-\begin{align}
-    h_{ideal}(n) = \dfrac{sin\left(\omega_{c}\cdot n\right)}{\pi\cdot n} = \omega_{c} \cdot sinc\left(\dfrac{\omega_{c}}{\pi} \cdot n\right)
-    \label{eq-imp-pasabajo-ideal}
-\end{align}
-
-Para la ventana se utiliza la ventana de Hamming, ya que es muy simple la implementación, la formula general es común con otras ventanas (como Hanning) y se muestra a continuación en la ecuación \ref{eq-ventana-formula-general-hamming}, en particular para la ventana de Hamming los coeficientes $a_{0}$ y $a_{1}$ toman los valores aproximados $0.54$ y $0.46$ respectivamente\footnotemark[1].
-
-\footnotetext[1]{Ventana (función) \citep{wiki123}}
-
-\begin{align}
-    w(n) = a_{0}-a_{1}\cdot cos\left(\dfrac{2\pi n}{N - 1}\right);\;\;
-     w_{Hamming}(n) = 0.54-0.46\cdot cos\left(\dfrac{2\pi n}{N - 1}\right)
-    \label{eq-ventana-formula-general-hamming}
-\end{align}
-
-Teniendo la expresión de la ventana $w(n)$ y la respuesta al impulso del filtro ideal $h_{ideal}(n)$ se obtiene la respuesta al impulso del filtro FIR $h(n)$ de la ecuación \ref{eq-ventaneo}, en este caso tomando 700 coeficientes, es decir, se tiene un filtro de grado 700. La respuesta al impulso se muestra graficada en la figura \ref{fig-respuesta-al-impulso-fir} en la cual se ve claramente la forma de la función sinc.
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=\linewidth]{plot/respuesta_al_impulso_filtro_fir.png}
-    \caption{Respuesta al impulso filtro pasa-bajos FIR de grado $700$}
-    \label{fig-respuesta-al-impulso-fir}
-\end{figure}
-
-La respuesta en frecuencia del filtro se obtiene tomando $z=j\omega$ en la función de transferencia del sistema $H(z)$ mencionada previamente en la ecuación \ref{fig-respuesta-en-freq-fir}. En la figura \ref{fig-respuesta-en-freq-fir} se grafica la respuesta en frecuencia del filtro pasa-bajos elegido, la magnitud se muestra en color azul y la fase en color rojo. Se nota que a partir de la frecuencia de corte ($2627.1$ Hz, correspondiente al punto de $-3$dB) se atenúan drásticamente las señales y en particular para las frecuencias mayores a la de Nyquist ($2756.2$ Hz) ya se puede decir prácticamente que se atenúan por completo ya que se tiene una ganancia de $-60dB$, esto es $0.001$ veces, lo cual era el objetivo para evitar aliasing al decimar. Además se observa la fase lineal hasta la frecuencia de corte, esta es una de las principales características de los filtros FIR por sobre los IIR, que es que no distorsionan la fase. 
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=\linewidth]{plot/respuesta_en_frecuencia_pasa-bajos_fir.png}
-    \caption{Respuesta en frecuencia filtro pasa-bajos FIR de grado $700$}
-    \label{fig-respuesta-en-freq-fir}
-\end{figure}
-
-Los ceros $z_{i}$ y polos $p_{i}$ se definen como aquellos puntos del plano complejo en donde la función de transferencia del sistema $H(jw)$ se anula, en el caso de los ceros y diverge a infinito, en el caso de los polos. La particularidad de los filtros FIR es que no tienen polos distintos de cero, esto sale de analizar la ecuación \ref{eq-transferencia-filtro-fir}, se tiene una sumatoria de coeficientes no nulos constantes multiplicados por la variable $z^{-1}$, la única forma de que la transferencia tienda a infinito es que la variable z tienda a $0$ de manera de que $z^{-1}$ diverja.
-
-%ve factorizando la expresión de la ecuación \ref{eq-transferencia-filtro-fir} como se muestra en la ecuación \ref{eq-transferencia-filtro-fir-factorizada}. 
-
-%\begin{align}
-%   H(z) = h(0)\sum_{k=0}^{M} b_{k}\cdot z^{-k}
-%    \label{eq-transferencia-filtro-fir-factorizada}
-%\end{align}
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=\linewidth]{plot/polos_y_ceros_pasa-bajos_fir.png}
-    \caption{Polos y ceros filtro pasa-bajos FIR de grado $700$}
-    \label{fig-respuesta-en-freq-fir}
-\end{figure}
+\end{document}

@@ -28,7 +28,7 @@ Para reducir la frecuencia de muestreo de la señal discreta de $44100$Hz a $551
 
 El diagrama debloques del sistema a utilizar se compone de un filtro pasa-bajos y luego un muestreador o compresor de la señal en dominio temporal como se muestra en la figura \ref{fig-diagrama-de-bloques-decimador}, en la cual $x(n)$ representa la señal de entrada y $x_{d}(n)$ la señal decimada. El filtro pasa-bajos se utiliza para evitar aliasing si la señal de entrada $x_{n}$ no permite decimación en $8$ veces, es decir, tiene ancho de banda mayor a $2\pi/8$ o en frecuencia siendo $5512.5$Hz
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=0.75\linewidth]{img/diagrama_de_bloques-decimador.png}
     \caption{Diagrama de bloques reducción de frecuencia}
@@ -89,7 +89,7 @@ Para la ventana se utiliza la ventana de Hamming, ya que es muy simple la implem
 
 Teniendo la expresión de la ventana $w(n)$ y la respuesta al impulso del filtro ideal $h_{ideal}(n)$ se obtiene la respuesta al impulso del filtro FIR $h(n)$ de la ecuación \ref{eq-ventaneo}, en este caso tomando 700 coeficientes, es decir, se tiene un filtro de grado 700. La respuesta al impulso se muestra graficada en la figura \ref{fig-respuesta-al-impulso-fir} en la cual se ve claramente la forma de la función sinc.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=\linewidth]{plot/respuesta_al_impulso_filtro_fir.png}
     \caption{Respuesta al impulso filtro pasa-bajos FIR de grado $700$}
@@ -98,7 +98,7 @@ Teniendo la expresión de la ventana $w(n)$ y la respuesta al impulso del filtro
 
 La respuesta en frecuencia del filtro se obtiene tomando $z=j\omega$ en la función de transferencia del sistema $H(z)$ mencionada previamente en la ecuación \ref{fig-respuesta-en-freq-fir}. En la figura \ref{fig-respuesta-en-freq-fir} se grafica la respuesta en frecuencia del filtro pasa-bajos elegido, la magnitud se muestra en color azul y la fase en color rojo. Se nota que a partir de la frecuencia de corte ($2627.1$ Hz, correspondiente al punto de $-3$dB) se atenúan drásticamente las señales y en particular para las frecuencias mayores a la de Nyquist ($2756.2$ Hz) ya se puede decir prácticamente que se atenúan por completo ya que se tiene una ganancia de $-60dB$, esto es $0.001$ veces, lo cual era el objetivo para evitar aliasing al decimar. Además se observa la fase lineal hasta la frecuencia de corte, esta es una de las principales características de los filtros FIR por sobre los IIR, que es que no distorsionan la fase. 
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=\linewidth]{plot/respuesta_en_frecuencia_pasa-bajos_fir.png}
     \caption{Respuesta en frecuencia filtro pasa-bajos FIR de grado $700$}
@@ -114,7 +114,7 @@ Los ceros $z_{i}$ y polos $p_{i}$ se definen como aquellos puntos del plano comp
 %    \label{eq-transferencia-filtro-fir-factorizada}
 %\end{align}
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=\linewidth]{plot/polos_y_ceros_pasa-bajos_fir.png}
     \caption{Polos y ceros filtro pasa-bajos FIR de grado $700$}
