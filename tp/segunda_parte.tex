@@ -1,0 +1,482 @@
+\pagebreak
+
+\hypertarget{Dominio-de-frecuencia}{%
+\section{Dominio de frecuencia}\label{dominio-de-frecuencia}}
+
+En esta sección se analizan las mismas señales de audio que en la
+sección anterior, correspondientes a los archivos cancion1.wav y cancion2.wav, pero en el dominio de la frecuencia. Para esto se calcula la
+transformada discreta de fourier (DFT) de las mismas mediante un script de
+Python (que internamente utiliza el algoritmo FFT). El resultado se muestra en
+los figuras \ref{cancion1_fft} y \ref{cancion2_fft} para la señal de audio de
+las canciones 1 y 2 respectivamente.
+
+Se puede ver en la figura \ref{cancion1_fft} correspondiente a la primer canción
+picos angostos en frecuencias determinadas, en cambio para la segunda canción en
+la figura \ref{cancion2_fft}, se puede ver que la energía se distribuye en mas
+frecuencias ya que los picos no están tan definidos. Esto puede deberse a que en
+la primer canción se hallaban porciones periódicas de la señal en el dominio
+temporal mientras que para la segunda canción había mayor presencia de señales
+no periódicas.
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion1_fft.png}
+\caption{Espectro de `cancion1.wav'}
+\label{cancion1_fft}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion2_fft.png}
+\caption{Espectro de `cancion2.wav'}
+\label{cancion2_fft}
+\end{figure}
+
+\hypertarget{filtrado}{%
+\subsection{Filtrado en frecuencia}\label{filtrado}}
+
+A continuación se utilizaron las señales filtradas obtenidas en la primera parte para las muestras de los archivos `cancion1.wav' y `cancion2.wav' y se graficaron sus espectros en frecuencia, como se puede observar en las figuras \ref{cancion1_filter1_output_fft}, \ref{cancion1_filter2_output_fft}, \ref{cancion2_filter1_output_fft} y \ref{cancion2_filter2_output_fft}. Los gráficos \ref{filter1_h_fft} y \ref{filter2_h_fft} corresponden a las transformadas de Fourier de los filtros utilizados anteriormente.
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/filter1_h_fft.png}
+\caption{Transformada de Fourier del primer filtro}
+\label{filter1_h_fft}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/filter2_h_fft.png}
+\caption{Transformada de Fourier del segundo filtro}
+\label{filter2_h_fft}
+\end{figure}
+
+Como era de esperarse y como se anticipó en la primera parte, el primer filtro corresponde a un filtro pasa altos mientras que el segundo es un filtro pasa bajos. En el caso del primero deja pasar por completo las frecuencias mayores a 800Hz aproximadamente y atenúa en mayor o menor medida las frecuencias restantes, mientras que el segundo deja pasar las frecuencias menores a 4600Hz aproximadamente, atenúa por completo las frecuencias mayores a 5600Hz aproximadamente y atenúa en mayor o menor medida las que están en el medio.
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion1_filter1_output_fft.png}
+\caption{Espectro de `cancion1.wav' con filtro 1 aplicado}
+\label{cancion1_filter1_output_fft}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion1_filter2_output_fft.png}
+\caption{Espectro de `cancion1.wav' con filtro 2 aplicado}
+\label{cancion1_filter2_output_fft}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion2_filter1_output_fft.png}
+\caption{Espectro de `cancion2.wav' con filtro 1 aplicado}
+\label{cancion2_filter1_output_fft}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion2_filter2_output_fft.png}
+\caption{Espectro de `cancion2.wav' con filtro 2 aplicado}
+\label{cancion2_filter2_output_fft}
+\end{figure}
+
+Una de las formas de verificar si el sistema es LTI es con la siguiente relación:
+
+\[
+y(t) = (h * x)(t) = \int_{-\infty}^{\infty} h(\tau)\, x(t - \tau)\, d\tau
+\]
+
+ya que la salida $y(t)$ está dada por la convolución entre la señal de entrada $x(t)$ y la respuesta al impulso del sistema $h(t)$, al aplicar la transformada de Fourier a ambos lados de la ecuación, y utilizando la propiedad de que la convolución en el dominio del tiempo se convierte en una multiplicación en el dominio de la frecuencia, se obtiene:
+
+\[
+Y(\omega) = H(\omega) \cdot X(\omega)
+\]
+
+donde $X(\omega)$, $Y(\omega)$ y $H(\omega)$ son las transformadas de Fourier de $x(t)$, $y(t)$ y $h(t)$, respectivamente. Por lo tanto, si existe una función $H(\omega)$ tal que para una señal arbitraria $x(t)$ se cumple:
+
+\[
+Y(\omega) = H(\omega)\, X(\omega),
+\]
+
+entonces el sistema puede describirse completamente mediante su respuesta al impulso $h(t)$, y se concluye que es un sistema \textbf{lineal e invariante en el tiempo (LTI)}.
+
+En cambio, si la relación entre $X(\omega)$ e $Y(\omega)$ no puede expresarse como una multiplicación por una función fija $H(\omega)$, esto indica que el sistema no es LTI, ya sea porque es no lineal o porque su comportamiento varía en el tiempo.
+
+Por lo tanto, de forma manual se tomaron valores a una determinada frecuencia para ver si cumplen con esta relación. 
+
+
+\hypertarget{espectogramas}{%
+\subsection{Espectrogramas}\label{espectogramas}}
+
+Un espectrograma es una representación de la transformada de Fourier en el tiempo, esto es una representación en tres dimensiones, pero en un plano con colores, en el eje X se representa el tiempo, en el eje Y se representa la frecuencia y el que seria el eje Z, saliente de la pantalla, en este caso representado por el color del pixel, se representa la magnitud del armónico.
+
+Se tomaran diferentes longitudes de ventana, esto es la cantidad de muestras temporales que se toman de la señal para computar la DFT, un mayor numero implica mayor resolución en frecuencia pero menor resolución temporal, esto se manifiesta en el espectrograma por lineas o puntos bien definidos en el eje Y, pero difusos en las transiciones en el eje X, por el contrario un menor numero de puntos implica mayor resolución temporal pero menor resolución en frecuencia, esto es lineas o puntos cortantes en las transiciones en el eje X pero difusas en el eje Y.
+
+\hypertarget{espectograma-ventana-rectangular}{%
+\subsubsection{Espectrograma con ventana rectangular}\label{espectograma-ventana-rectangular}}
+
+En las figuras \ref{cancion1_espectograma_boxcar_0512}, \ref{cancion1_espectograma_boxcar_1024} y \ref{cancion1_espectograma_boxcar_2048} se gráfica el espectrograma de la primer canción, utilizando una ventana rectangular en todos los casos, tomando 512, 1024 y 2048 puntos respectivamente.
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion1_espectograma_boxcar_0512.png}
+\caption{Espectrograma primer muestra de ventana rectangular de 512 puntos}
+\label{cancion1_espectograma_boxcar_0512}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion1_espectograma_boxcar_1024.png}
+\caption{Espectrograma primer muestra de ventana rectangular de 1024 puntos}
+\label{cancion1_espectograma_boxcar_1024}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion1_espectograma_boxcar_2048.png}
+\caption{Espectrograma primer muestra de ventana rectangular de 2048 puntos}
+\label{cancion1_espectograma_boxcar_2048}
+\end{figure}
+
+De manera análoga, en las figuras \ref{cancion2_espectograma_boxcar_0512}, \ref{cancion2_espectograma_boxcar_1024} y \ref{cancion2_espectograma_boxcar_2048} se gráfica el espectrograma de la segunda canción, utilizando una ventana rectangular en todos los casos, tomando 512, 1024 y 2048 puntos respectivamente.
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion2_espectograma_boxcar_0512.png}
+\caption{Espectrograma segunda muestra de ventana rectangular de 512 puntos}
+\label{cancion2_espectograma_boxcar_0512}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion2_espectograma_boxcar_1024.png}
+\caption{Espectrograma segunda muestra de ventana rectangular de 1024 puntos}
+\label{cancion2_espectograma_boxcar_1024}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion2_espectograma_boxcar_2048.png}
+\caption{Espectrograma segunda muestra de ventana rectangular de 2048 puntos}
+\label{cancion2_espectograma_boxcar_2048}
+\end{figure}
+
+\hypertarget{espectograma-ventana-triangular}{%
+\subsubsection{Espectrograma con ventana triangular}\label{espectograma-ventana-triangular}}
+
+\iffalse
+A continuación se vuelve a graficar los espectrogramas de las canciones 1 y 2 tomando la misma cantidad de puntos, 512, 1024 y 2048, pero la diferencia siendo que se utiliza una ventana triangular. La diferencia entre ambas ventanas en la practica es que la ventana rectangular tiene mejor resolución en frecuencia ya que su DFT es una función sinc (con la función sinc definida como $sin(\pi\cdot x)/\pi\cdot x$) pero mayor fuga espectral, ya que los lóbulos secundarios de las sinc son mas fuertes que la DFT de la función triangular, que es una sinc pero al cuadrado, lo que hace que los lóbulos secundarios disminuyan. Para la primer muestra las figuras resultantes son \ref{cancion1_espectograma_bartlett_0512}, \ref{cancion1_espectograma_bartlett_1024} y \ref{cancion1_espectograma_bartlett_2048}, para el espectrograma utilizando ventana triangular y tomando 512, 1024 y 2048 puntos respectivamente. Para la segunda muestra, las figuras resultantes son \ref{cancion2_espectograma_bartlett_0512}, \ref{cancion2_espectograma_bartlett_1024} y \ref{cancion2_espectograma_bartlett_2048} para el espectrograma utilizando ventana triangular y tomando 512, 1024 y 2048 puntos respectivamente.
+\fi
+
+En la figura \ref{cancion1_espectograma_bartlett_2048} se muestra el espectrogramas de las canciones 1 tomando 2048 de puntos, pero utilizando una ventana triangular. La diferencia entre utilizar una ventana triangular y una rectangular en la practica es que la ventana rectangular tiene mejor resolución en frecuencia ya que su espectro es una función sinc (con la función sinc definida como $sin(\pi\cdot x)/\pi\cdot x$) pero mayor fuga espectral, ya que los lóbulos secundarios de las sinc son mas fuertes que la del espectro de la función triangular, que es una sinc pero al cuadrado, lo que hace que los lóbulos secundarios disminuyan.
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion1_espectograma_bartlett_2048.png}
+\caption{Espectrograma primer muestra de ventana triangular de 2048 puntos}
+\label{cancion1_espectograma_bartlett_2048}
+\end{figure}
+
+\iffalse
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion1_espectograma_bartlett_1024.png}
+\caption{Espectrograma primer muestra de ventana triangular de 1024 puntos}
+\label{cancion1_espectograma_bartlett_1024}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion1_espectograma_bartlett_0512.png}
+\caption{Espectrograma primer muestra de ventana triangular de 512 puntos}
+\label{cancion1_espectograma_bartlett_0512}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion2_espectograma_bartlett_0512.png}
+\caption{Espectrograma segunda muestra de ventana triangular de 512 puntos}
+\label{cancion2_espectograma_bartlett_0512}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion2_espectograma_bartlett_1024.png}
+\caption{Espectrograma segunda muestra de ventana triangular de 1024 puntos}
+\label{cancion2_espectograma_bartlett_1024}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion2_espectograma_bartlett_2048.png}
+\caption{Espectrograma segunda muestra de ventana triangular de 2048 puntos}
+\label{cancion2_espectograma_bartlett_2048}
+\end{figure}
+\fi
+
+\hypertarget{espectograma-ventana-hann}{%
+\subsubsection{Espectrograma con ventana de Hann}\label{espectograma-ventana-hann}}
+
+La ventana de Hann es una función que en el dominio temporal tiene una forma
+suave, no como la ventana rectangular o triangular que tiene puntos con derivada
+discontinua, la forma es parecida a medio ciclo de un seno. En el dominio de
+frecuencia, la ventana de Hann tiene una forma parecida a la de la ventana
+rectangular con un lóbulo principal, pero este mas ancho que el de la
+rectangular, esto implica menor resolución en frecuencia; además el espectro de
+la ventana de Hann tiene lóbulos laterales menores, lo que reduce aum mas la fuga espectral.
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion1_espectograma_hann_2048.png}
+\caption{Espectrograma primer muestra con ventana Hann de 2048 puntos}
+\label{cancion1_espectograma_hann_2048}
+\end{figure}
+
+\iffalse
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion1_espectograma_hann_0512.png}
+\caption{Espectrograma primer muestra con ventana Hann de 512 puntos}
+\label{cancion1_espectograma_hann_0512}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion1_espectograma_hann_1024.png}
+\caption{Espectrograma primer muestra con ventana Hann de 1024 puntos}
+\label{cancion1_espectograma_hann_1024}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion2_espectograma_hann_0512.png}
+\caption{Espectrograma segunda muestra con ventana Hann de 512 puntos}
+\label{cancion2_espectograma_hann_0512}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion2_espectograma_hann_1024.png}
+\caption{Espectrograma segunda muestra con ventana Hann de 1024 puntos}
+\label{cancion2_espectograma_hann_1024}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion2_espectograma_hann_2048.png}
+\caption{Espectrograma segunda muestra con ventana Hann de 2048 puntos}
+\label{cancion2_espectograma_hann_2048}
+\end{figure}
+\fi
+
+Analizando el espectrograma de la primer canción, en particular el de la figura \ref{cancion1_espectograma_bartlett_2048}, en el cual se toman 2048 puntos y se utiliza una ventana triangular, se observa claramente las notas que componen la melodía, y ademas en que tiempo ocurre cada una de ellas. Ademas se observa que no es muy clara la resolución temporal pero de todas maneras se tiene una aproximación general de en que tiempo ocurre cada nota, para mayor resolución se puede analizar en detalle la figura \ref{cancion1_espectograma_boxcar_0512} en la cual se toman menos puntos de ventana (y se utiliza una ventana rectangular) por lo tanto se tiene mayor resolución temporal.
+
+
+
+
+
+
+% PUNTO 5
+\hypertarget{serie-de-fourier-tomando-uno-y-varios-periodos
+}{%
+\subsection{Serie de Fourier tomando uno y varios periodos}\label{serie-de-fourier-tomando-uno-y-varios-periodos
+}}
+
+Para señales musicales de la nota A4 generados generadas en la sección \ref{sonido-de-diferentes-instrumentos} para diferentes instrumentos, mediante un script de python, se analiza el espectro de cada una y se remueven altas frecuencias, intentando preservar el sonido generado pero utilizando menor información para obtener dicho sonido.
+
+En primer lugar, se obtiene la serie de Fourier de cada una de las notas generada por los diferentes instrumentos, utilizando uno y mas periodos, para la generada por el clarinete, se muestra la serie de Fourier utilizando 1, 4 y 8 periodos en la figura \ref{a4_clarinete_fseries_comparison}, para la nota generada por la flauta la serie de Fourier se observar en la figura \ref{a4_flauta_fseries_comparison}, finalmente en la figura \ref{a4_violin_fseries_comparison} ser observa la serie de Fourier para la nota A4 generada por el violín. Se puede ver en todos los casos que tomando mas periodos de la señal se tiene más resolución espectral, y tiene sentido ya que al tomar mas periodos se tiene mas información de la señal.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/a4_clarinete_fseries_comparison.png}
+\caption{Serie de Fourier tomando 1, 4 y 8 periodos nota A4 clarinete}
+\label{a4_clarinete_fseries_comparison}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/a4_flauta_fseries_comparison.png}
+\caption{Serie de Fourier tomando 1, 4 y 8 periodos nota A4 flauta}
+\label{a4_flauta_fseries_comparison}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/a4_violin_fseries_comparison.png}
+\caption{Serie de Fourier tomando 1, 4 y 8 periodos nota A4 violín}
+\label{a4_violin_fseries_comparison}
+\end{figure}
+
+\hypertarget{filtrado-de-muestras}{%
+\subsection{Filtrado de muestras}\label{filtrado-de-muestras}}
+
+Para realizar el filtrado, se eliminan frecuencias mayores a un numero de frecuencia arbitrario, esto es análogo a aplicar un filtro pasa-bajos en la practica, pero mediante procesamiento digital. El numero arbitrario que define que frecuencias se deben eliminar queda determinado por como suena la señal luego de eliminar esas frecuencias mayores. En particular se ha detectado que para la flauta por tener un menor numero de armónicos, como se puede ver en la figura \ref{a4_flauta_fseries_comparison} de su serie de Fourier, este numero arbitrario puede ser tan bajo como 1000 Hz, sin modificar demasiado el sonido de la nota. En el otro extremo se tiene el violín, el cual se ve en su serie de Fourier (figura \ref{a4_violin_fseries_comparison}) que posee un gran numero de armónicos, esto hace que si se eliminan frecuencias bajas se modifica mucho el sonido de la nota. En todos los casos se observa que no se puede `comprimir' demasiado la señal puesto que no poseen armónicos de alta frecuencia, ya de por si son muestras `limpias' que ya poseen un procesamiento digital previo realizado por el programa generador.
+
+Una comparación entre las señal temporal resultante de las notas musicales filtradas y la señal original se muestran en las figuras \ref{a4_violin_cutoff_time_comparison}, \ref{a4_clarinete_cutoff_time_comparison} y \ref{a4_flauta_cutoff_time_comparison}, para la nota filtrada del violín, del clarinete y de la flauta, respectivamente.
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/a4_violin_cutoff_time_comparison.png}
+\caption{Comparación entre señal original y filtrada en tiempo nota A4 vioin}
+\label{a4_violin_cutoff_time_comparison}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/a4_clarinete_cutoff_time_comparison.png}
+\caption{Comparación entre señal original y filtrada en tiempo nota A4 clarinete}
+\label{a4_clarinete_cutoff_time_comparison}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/a4_flauta_cutoff_time_comparison.png}
+\caption{Comparación entre señal original y filtrada en tiempo nota A4 flauta}
+\label{a4_flauta_cutoff_time_comparison}
+\end{figure}
+
+
+
+\hypertarget{Efectos-musicales-en-términos-de-sistemas}{%
+\subsection{Efectos musicales en términos de sistemas}\label{Efectos-musicales-en-términos-de-sistemas}}
+
+En esta sección se analizan distintos efectos interpretándolos como sistemas que procesan la señal de entrada $x(t)$ dando en la salida una señal $y(t)$. 
+
+% Se trabaja con una señal senoidal pura de 440Hz, implementando los efectos de manera digital mediante código. En cada caso se grafican los espectros resultantes de aplicar los distintos efectos a la señal original.
+
+\subsubsection{Delay}
+
+El efecto \textit{delay} consiste en sumar a la señal original una copia de sí misma con un factor de retroalimentación que genera repeticiones. Puede modelarse como:
+
+\[
+y[n] = x[n] + \alpha\, y[n - D]
+\]
+
+donde $D$ representa el retardo en muestras y $\alpha$ es el coeficiente de retroalimentación.
+
+Analizando las propiedades de este sistema, se observa que es un sistema \textbf{lineal}, que posee \textbf{memoria} ya que depende de muestras pasadas, y es \textbf{invariante en el tiempo} debido a que el retardo no cambia a lo largo del tiempo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{plot/delay_100ms.png}
+    \caption{Delay de 100ms}
+    \label{delay}
+\end{figure}
+
+Como se puede observar en la figura \ref{delay}, se tomó un fragmento de una canción para poder ver un delay de unos 100ms. En particular se tomaron los últimos segundos de la señal para que se pueda reconocer cuando termina la original y ver como se repiten los últimos 100ms.
+
+\subsubsection{Distorsión}
+
+La distorsión consiste en aplicar una función no lineal sobre la amplitud de la señal, como puede ser un recorte (clipping). En este caso se utiliza la función tangente hiperbólica:
+
+\[
+y[n] = tanh(Gx[n])
+\]
+
+Este sistema no es lineal ya que su salida no es proporcional a la entrada, es invariante en el tiempo ya que no cambia en el tiempo, y es sin memoria porque cada muestra depende solo de la muestra actual.
+Se observa la aparición de armónicos múltiples de la frecuencia fundamental, dando un tono mas brillante y enriquecido.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{plot/dist_tiempo.png}
+    \caption{Distorsión en el dominio del tiempo}
+    \label{dist_tiempo}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{plot/dist_frec.png}
+    \caption{Distorsión en el dominio de la frecuencia}
+    \label{dist_frec}
+\end{figure}
+
+En la figura \ref{dist_tiempo} se puede observar la función de prueba utilizada, la cual corresponde a un seno de frecuencia 5Hz y en línea punteada el efecto delay en el tiempo, mientras que en la figura \ref{dist_frec} se puede ver el efecto en el dominio de la frecuencia, el cual agrega pequeñas componentes en otras frecuencias.
+
+\subsubsection{Trémolo}
+
+Consiste en la modulación de la amplitud de la señal, es decir, en variar su volumen en forma periódica mediante un oscilador. Se implementa mediante
+
+\[
+y[n] = \left( 1 - d \, \sin\left( \frac{2\pi f_m n}{f_s} \right) \right) x[n]
+\]
+
+donde $d$ es la profundidad de modulación y $f_m$ la frecuencia de modulación.
+
+El sistema implementado es \textbf{lineal}, \textbf{invariante en el tiempo} (si la frecuencia de modulación es constante) y \textbf{tiene memoria}, ya que depende de una función periódica externa.  
+
+En el espectro de la señal se pueden observar \textit{bandas laterales} que rodean la frecuencia fundamental, producidas por la modulación en amplitud.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{plot/tremolo.png}
+    \caption{Señal de prueba}
+    \label{tremolo}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{plot/tremolo_frec.png}
+    \caption{Efecto tremolo}
+    \label{tremolo_frec}
+\end{figure}
+
+Para este caso se utilizó una señal de prueba correspondiente a un seno de frecuencia 440Hz, como se puede observar en la figura \ref{tremolo}, mientras en la figura \ref{tremolo_frec} ésta misma con el efecto aplicado. Las frecuencias correspondientes a las \textit{bandas laterales} en este caso están en 435Hz y 445Hz.  
+
+\subsubsection{Vibrato}
+
+Produce una modulación en frecuencia, alterando la frecuencia instantánea de la señal. Se lo puede expresar como un retardo variable en el tiempo:
+
+\[
+y[n] = x\!\left[n + d \, \sin\!\left( \frac{2\pi f_m n}{f_s} \right)\right]
+\]
+
+Se observa que este sistema \textbf{no es lineal}, ya que el desplazamiento depende de la señal moduladora.  
+Es \textbf{invariante en el tiempo} (si el modulador es constante) y \textbf{tiene memoria}, ya que utiliza muestras pasadas.  
+
+En el espectro se puede apreciar un \textit{ensanchamiento} en la frecuencia fundamental con variaciones periódicas alrededor de la misma, lo que refleja la modulación del tono.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{plot/vibrato_frec.png}
+    \caption{Vibrato de la señal de prueba}
+    \label{vibrato_frec}
+\end{figure}
+
+Para este caso se volvió a utilizar la señal de prueba de la figura \ref{tremolo}, y como se mencionó se puede observar en la figura \ref{vibrato_frec} que aparecen nuevas frecuencias en múltiplos de la frecuencia de las \textit{bandas laterales}.
+
+\subsubsection{Chorus}
+
+Combina múltiples copias de la señal, cada una con un retardo distinto.  
+Simula varios instrumentos sonando al mismo tiempo.  
+Se lo puede modelar como la suma de varios vibratos:
+
+\[
+y[n] = \frac{1}{N} \sum_{k=1}^{N} x\!\left[n + d_k \sin\!\left( \frac{2\pi f_{m_k} n}{f_s} \right)\right]
+\]
+
+Es un sistema \textbf{no lineal} debido a la interpolación variable,  
+\textbf{invariante en el tiempo} (si los parámetros son constantes) y \textbf{tiene memoria} debido al retardo de cada instrumento.  
+
+En el espectro se observa un \textit{ensanchamiento} alrededor de la frecuencia fundamental  
+y una estructura densa debido a la suma de fuentes sonoras.
+
+Cada efecto puede interpretarse como un sistema que transforma una señal de entrada aplicando operaciones de retardo, modulación o no linealidad. Los efectos que se caracterizaron como lineales e invariantes en el tiempo (delay y trembolo) modifican el espectro de manera predecible. Mientras que los no lineales introducen componentes que afectan la estructura armónica que se tenía en la señal original
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{plot/chorus_frec.png}
+    \caption{Efecto chorus de la señal de prueba}
+    \label{chorus_frec}
+\end{figure}
+
+En la figura \ref{chorus_frec} se puede observar el espectro en frecuencia de la señal de prueba de la figura \ref{tremolo}, pero con el efecto chorus aplicado.
+
+\iffalse
+% commentado
+
+\hypertarget{Gráfico-temporal-y-espectrograma-de-una-melodía-musical}{%
+\subsubsection{Gráfico temporal y espectrograma de una melodía musical}\label{Gráfico-temporal-y-espectrograma-de-una-melodía-musical}}
+
+\fi

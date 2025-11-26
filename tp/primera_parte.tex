@@ -1,0 +1,298 @@
+
+\section{Introducción}
+
+En el presente trabajo se realiza un análisis en el dominio temporal de en
+principio dos señales musicales de muestra, en las cuales se buscan porciones
+cuasi-periódicas y no periódicas, y luego se filtran utilizando dos filtros
+diferentes.  Por último, se generan mediante simulación de tres instrumentos
+musicales diferentes, tres señales, las cuales se analizan y comparan las formas
+de onda generadas.
+
+\hypertarget{dominio-temporal}{%
+\section{Dominio temporal}\label{dominio-temporal}}
+
+\hypertarget{primer-muestra}{%
+\subsection{Primer muestra}\label{primer-muestra}}
+
+Para la primer muestra (archivo cancion1.wav) se realiza el
+gráfico de la misma en el dominio temporal, el resultado se muestra en
+la figura 1.
+
+La frecuencia de muestreo de la misma es 44100 Hz, esto se obtiene del
+mismo script utilizado para graficar el archivo, en el cual se divide la
+cantidad de muestras por la duración del archivo.
+
+\begin{figure}
+\centering
+\includegraphics{plot/cancion1.png}
+\caption{Gráfico de archivo `cancion1.wav'}
+\label{cancion1}
+\end{figure}
+
+\hypertarget{secciones-cuasi-periuxf3dicas}{%
+\subsubsection{Secciones
+cuasi-periódicas}\label{secciones-cuasi-periodicas}}
+
+Cuando la señal tiene una estructura repetitiva, pero con variaciones en
+amplitud, fase o frecuencia se dice que la señal es cuasi-periódica.
+
+Realizando un análisis visual en detalle de la muestra se buscan partes
+donde se comporte como tal, dos ejemplos se dan en las figuras 2 y 3. En
+la primera se gráfica el intervalo \(0.248\) s a \(0.256\) s, mientras
+que en la segunda se gráfica el intervalo \(0.520\) s a \(0.528\) s.
+
+\begin{figure}
+\centering
+\includegraphics{plot/cancion1_0_248s_a_0_256s.png}
+\caption{Sección cuasi-periódica archivo `cancion1.wav'}
+\label{cancion1_seccion_cuasi_periodica}
+\end{figure}
+
+Dentro de los intervalos cuasi-periódicos graficados, se pueden detectar
+visualmente los períodos fundamentales, los cuales se ven resaltados en
+color celeste claro.
+
+Curiosamente en ambos casos el período es igual y resulta \(T=0.003\) s,
+lo cual corresponde con una frecuencia de aproximadamente \(333\) Hz.
+Comparando con notas musicales de tabla esto se asemeja a una nota
+\emph{E4}, la cual tiene una frecuencia de \(329.228\) Hz. Siendo que el
+período se relaciona de manera inversa con la frecuencia y esta de
+manera directa con la nota musical, se puede asegurar que al disminuir
+este período la frecuencia aumentará y la nota musical será mas aguda,
+mientras que en el caso contrario si aumenta el período la frecuencia
+disminuye y también la nota musical.
+
+\begin{figure}
+\centering
+\includegraphics{plot/cancion1_0_520s_a_0_528s.png}
+\caption{Otra sección cuasi-periódica archivo `cancion1.wav'}
+\label{cancion1_seccion_cuasi_periodica2}
+\end{figure}
+
+\hypertarget{segunda-muestra}{%
+\subsection{Segunda muestra}\label{segunda-muestra}}
+
+Utilizando el mismo script de python utilizado para la primer muestra
+(archivo cancion1.wav) se gráfica la señal de la segunda
+muestra (correspondiente al archivo cancion2.wav) en el dominio
+temporal, en este caso se gráfica a partir del segundo 6 ya que antes de
+esto la señal tiene amplitud nula, con lo cual no aporta información
+significativa, el gráfico resultante se muestra en la figura 4.
+
+La frecuencia fundamental de esta segunda muestra resulta \(48000\) Hz,
+esto también se obtiene del script de python.
+
+\begin{figure}
+\centering
+\includegraphics{plot/cancion2.png}
+\caption{Gráfico de archivo `cancion2.wav'}
+\label{cancion2}
+\end{figure}
+
+\hypertarget{secciones-no-periodicas}{%
+\subsubsection{Secciones no-periódicas}\label{secciones-no-periodicas}}
+
+A diferencia del análisis realizado sobre la primer muestra en busca de
+secciones cuasi-periódicas, para esta segunda muestra se buscan
+secciones no periódicas, esto es, secciones donde la señal no tiene un
+patron repetitivo marcado. Se toman dos intervalos en los cuales la
+señal de muestra se comporta como tal, el intervalo de \(14.72\) s a
+\(14.73\) s y el intervalo \(26.57\) s a \(26.58\) s, ambos intervalos
+se muestran graficados en las figura 5 y 6 respectivamente.
+
+\begin{figure}
+\centering
+\includegraphics{plot/cancion2_14_72s_a_14_73s.png}
+\caption{Sección no periódica archivo `cancion2.wav'}
+\label{cancion2_seccion_no_periodica}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{plot/cancion2_26_57s_a_26_58s.png}
+\caption{Otra sección no periódica archivo `cancion2.wav'}
+\label{cancion2_seccion_no_periodica2}
+\end{figure}
+
+Dado que las secciones son no periódicas, no se puede hablar de una
+frecuencia fundamental como si se podía en las secciones
+cuasi-periódicas en la primer muestra.
+
+
+
+
+
+\hypertarget{filtrado}{%
+\subsection{Filtrado}\label{filtrado}}
+
+Para obtener la salida de la señal luego de pasarla por un filtro
+(respuesta al impulso del primer filtro correspondiente al archivo
+respuesta\_impulso\_1.txt y del segundo filtro correspondiente
+al archivo respuesta\_impulso\_2.txt) es necesario realizar una
+convolución entre la señal de entrada y la respuesta al impulso del
+filtro, esto suponiendo que el filtro es un sistema LTI (si no lo fuera
+no se podría calcular la salida solo teniendo la respuesta al impulso).
+
+La salida del filtro 1 al aplicar la primer muestra se puede ver en la
+figura \ref{cancion1_filter1_output_compare}, en este gráfico de la señal completa se observa que atenúa partes de la señal y
+amplifica otras, en particular amplifica principalmente antes del
+segundo \(6\) y atenúa drásticamente luego. En mayor detalle como se observa en la figura \ref{cancion1_filter1_output_compare_0_248_a_0_256} para el intervalo entre 0.248 y 0.256 segundos, se ve como actúa sobre la señal amplificando partes de la misma.
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion1_filter1_output_compare.png}
+\caption{Primer muestra salida de filtro 1}
+\label{cancion1_filter1_output_compare}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion1_filter1_output_compare_0_248_a_0_256.png}
+\caption{Primer muestra salida de filtro 1 intervalo 0.248 a 0.256s}
+\label{cancion1_filter1_output_compare_0_248_a_0_256}
+\end{figure}
+
+Aplicando el segundo filtro a la primer muestra resulta como se muestra
+en el gráfico de figura \ref{cancion1_filter2_output_compare}. 
+En esta figura de la señal completa Se puede ver que esta a diferencia del filtro 1, no atenúa o amplifica significativamente partes de la señal, si no
+que realiza una leve atenuación de toda la señal. Analizando en detalle como se ve en la figura \ref{cancion1_filter2_output_compare_0_248_a_0_256} se puede ver el suavizado que realiza este filtro sobre la señal, esto sugiere que el filtro 2 es del tipo pasa bajos, ya que atenúa la frecuencias altas componentes en la señal original, haciendo que la señal resultante no tenga cambios abruptos.
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion1_filter2_output_compare.png}
+\caption{Primer muestra salida de filtro 2}
+\label{cancion1_filter2_output_compare}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{plot/cancion1_filter2_output_compare_0_248_a_0_256.png}
+\caption{Primer muestra salida de filtro 2 intervalo 0.248 a 0.256s}
+\label{cancion1_filter2_output_compare_0_248_a_0_256}
+\end{figure}
+
+De manera análoga para la segunda muestra se aplican los filtros mediante la
+convolución entre la señal y la respuesta al impulso del respectivo filtro.
+
+La salida de la segunda muestra al aplicar el primer filtro se puede ver en la
+figura \ref{cancion2_filter1_output_compare} en la cual se gráfica la señal
+completa y se aprecia como se atenúa la mayor parte, principalmente en la
+primera mitad (antes del segundo 18.5 aproximadamente) y en menor medida en
+la mitad restante, aunque en partes de la segunda mitad se atenúa drásticamente
+de todas formas, como por ejemplo en el segundo 29 en el que se atenúa
+aproximadamente un 70\% de la señal.
+
+En la figura \ref{cancion2_6s_filter1_output_compare_26_57_a_26_58} se analiza
+en mayor detalle la señal, en este caso el intervalo entre 26.57 y 26.58
+segundos, en esta figura se observa como amplifica partes de la señal, en
+particular, se observa que amplifica los picos en donde la señal tiene cambios
+abruptos, es decir, donde la señal se compone de frecuencias altas, esto sugiere
+que el primer filtro es del tipo pasa altos, es decir atenúa las frecuencias
+bajas.
+
+\begin{figure}
+\centering
+\includegraphics{plot/cancion2_6s_filter1_output_compare.png}
+\caption{Segunda muestra salida de filtro 1}
+\label{cancion2_filter1_output_compare}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{plot/cancion2_6s_filter1_output_compare_26_57_a_26_58.png}
+\caption{Segunda muestra salida de filtro 1 intervalo 26.57 a 26.58s}
+\label{cancion2_6s_filter1_output_compare_26_57_a_26_58}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{plot/cancion2_6s_filter2_output_compare.png}
+\caption{Segunda muestra salida de filtro 2}
+\label{cancion2_filter2_output_compare}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{plot/cancion2_6s_filter2_output_compare_26_57_a_26_58.png}
+\caption{Seguida muestra salida de filtro 2 intervalo 26.57 a 26.58s}
+\label{cancion2_6s_filter2_output_compare_26_57_a_26_58}
+\end{figure}
+
+
+En las figura \ref{cancion2_filter2_output_compare} se muestra la señal completa
+de la salida luego de aplicar el segundo filtro a la segunda muestra, de esta
+figura no se pueden sacar grandes conclusiones mas que una leve atenuación de
+toda la señal. Analizando en mayor detalle, por ejemplo el intervalo de 26.57 a
+26.58 segundos, como se muestra en la figura
+\ref{cancion2_6s_filter2_output_compare_26_57_a_26_58} se observa algo similar a
+lo observado para la primer muestra luego de aplicar este filtro y es el
+suavizado que realiza.
+
+En todos los casos, tanto para la primer muestra como para la segunda y
+tanto para el primer filtro como el segundo, escuchando la respectiva
+salida se confirma lo analizado desde el punto de vista del gráfico de
+la señal, pero ademas se aprecia que el primer filtro realiza una
+atenuación de las frecuencias mas altas (sonidos agudos) mientras que el
+segundo disminuye las frecuencias bajas (o sonidos graves) esto ultimo
+no se aprecia en el gráfico de la señal, ya que parece no tener efecto
+mas que une leve atenuación.
+
+\hypertarget{sonido-de-diferentes-instrumentos}{%
+\subsection{Sonido de diferentes
+instrumentos}\label{sonido-de-diferentes-instrumentos}}
+
+Se generaron tres muestras diferentes a las ya utilizadas, correspondientes con
+la nota \emph{A4} (La4, \(440\) Hz) mediante la simulación de tres instrumentos
+musicales distintos: un clarinete, una flauta y un violín. Las señales generadas
+corresponden con los archivos a4\_clarinete.wav, a4\_flauta.wav y a4\_violin.wav
+y los gráficos de cada señal se muestran en las figuras \ref{a4_clarinete_cutoff_time_comparison}, \ref{a4_clarinete_cutoff_time_comparison} y \ref{a4_violin_cutoff_time_comparison}
+respectivamente.
+
+Si bien todos los sonidos tienen la misma frecuencia, ya que es la misma
+nota musical, el sonido escuchado percibido es diferente, esto puede ser
+producto de la forma de onda generada por cada instrumento, lo cual
+queda clara la diferencia en los respectivos gráficos.
+
+Cada sonido percibido tiene características diferentes, el mas apagado o
+neutro es el producido por la flauta, mientras que el mas agudo o
+``afilado'' es el producido por el violín, el sonido del clarinete es un
+intermedio entre ambos, un sonido ni muy agudo ni muy grave o apagado, y
+con cierto carácter metálico.
+
+Para el caso del clarinete, cuya señal se puede ver en la figura \ref{a4_clarinete_cutoff_time_comparison}, se puede ver que la onda se parece a una onda cuadrada. En el dominio de frecuencia, las ondas cuadradas ideales se componen de armónicos impares.
+
+%\begin{figure}
+%\centering
+%\includegraphics{plot/a4_clarinete.png}
+%\caption{Sonido de clarinete}
+%\label{a4_clarinete}
+%\end{figure}
+
+Para la señal producida por la flauta que se puede ver en la figura \ref{a4_clarinete_cutoff_time_comparison},
+se puede ver que se asemeja a una señal senoidal pura, aunque no tan
+simétrica en los picos, las ondas sinodales en el dominio de frecuencia
+tienen un único armónico, y es el fundamental, es por esto que el sonido
+es mas neutro y no tan ``brillante'' o agudo dado que la frecuencia es
+la misma en todos los casos.
+
+%\begin{figure}
+%\centering
+%\includegraphics{plot/a4_flauta.png}
+%\caption{Sonido de flauta}
+%\label{a4_flauta}
+%\end{figure}
+
+Por ultimo para la señal producida por el violín, la cual se puede ver
+en la figura \ref{a4_violin_cutoff_time_comparison}, se asemeja a una onda triangular con pendiente
+decreciente, estas ondas triangulares en el dominio de frecuencia
+también tienen armónicos impares como la onda cuadrada, pero estos
+armónicos tienen mayor amplitud, es por esto que si bien tienen un
+sonido similar, el sonido del violín es mas agudo.
+
+%\begin{figure}[H]
+%\centering
+%\includegraphics{plot/a4_violin.png}
+%\caption{Sonido de violín}
+%\label{a4_violin}
+%\end{figure}
+
