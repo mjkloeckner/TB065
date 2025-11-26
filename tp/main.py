@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.io import wavfile
+from scipy.signal import firwin, freqz, tf2zpk
 from utils import *
 
 ## Datos
@@ -64,7 +65,6 @@ def time_domain_cancion1():
                        "cancion1_filter2_output_compare_0_248_a_0_256",
                        t=0.248, dt=0.008)
 
-## 'cancion2'
 def time_domain_cancion2():
     ### grafico completo
     time_plot(file2_fs, file2_data, "cancion2", t=6)
@@ -281,27 +281,112 @@ def a4_violin_fseries():
     save_plot(fig, "a4_violin_fseries_comparison")
 
 
+############################# Tercera parte ###################################
+
+cutoff = 2650    # frecuencia de corte
+M = 700          # orden FIR (número de coeficientes)
+fs = 44100
+
+def filtro_fir():
+    # Diseño FIR pasabajos con ventana
+    b = firwin(M, cutoff, fs=fs, window='hamming')
+
+    w, H = freqz(b, worN=2048, fs=fs)
+    fase = np.unwrap(np.angle(H))*180/np.pi
+
+    fig, ax1, ax2 = freq_response_plot(w, H, fase, show=False)
+    save_plot(fig, "respuesta_en_frecuencia_pasa-bajos_fir")
+
+# `a` son los coeficientes de la respuesta al impulso (coinciden con los
+# coeficientes de respuesta en frecuencia)
+def filtro_fir_polos_y_ceros(a):
+    zeros, poles, gain = tf2zpk(a, [1])
+
+    # Crear figura
+    fig, axis = plt.subplots(figsize=(8, 4))
+
+    axis.scatter(np.real(zeros), np.imag(zeros),
+                 s=25, facecolors='none', edgecolors='tab:blue', zorder=10,
+                 label='Ceros', linewidth=1.25)
+
+    axis.scatter(np.real(poles), np.imag(poles),
+                 s=25, marker='x', color='tab:red',
+                 label='Polos')
+
+    axis.set_xlabel("Real", color="black")
+    axis.set_ylabel("Imaginario", color="black")
+
+    # Unidad círculo para referencia
+    # theta = np.linspace(0, 2*np.pi, 100)
+    # plt.plot(np.cos(theta), np.sin(theta))  # círculo unitario
+
+    # axis.yaxis.set_major_locator(MaxNLocator(nbins=5))
+
+    axis.grid(True, which='major', color='black', linestyle=':', linewidth=1.00)
+    axis.grid(True, which='minor', color='black', linestyle=':', linewidth=0.50)
+    axis.xaxis.set_minor_locator(AutoMinorLocator(2))
+
+    plt.grid(True)
+    plt.axis('equal')
+    axis.legend()
+    save_plot(fig, "polos_y_ceros_pasa-bajos_fir")
+
+
+def filtro_fir_deducido():
+    # respuesta ideal pasabajos: sinc centrada en M/2
+    n = np.arange(M + 1)
+    wc = 2*np.pi*cutoff / fs
+
+    # h_ideal = sinc(wc*n)/(pi n); wc = 2pi*fc/fs
+    # se normaliza la ganancia a 1 multiplicando por 2.0*(fc/fs)
+    h_ideal = np.sinc(2.0 * (cutoff/fs) * (n - M/2))
+
+    # ventana de Hamming
+    v = 0.54 - 0.46 * np.cos(2*np.pi*n/M)
+
+    # respuesta del filtro FIR (version acotada de la sinc)
+    h = h_ideal * v
+
+    # se normaliza para tener ganancia unitaria para frecuancias <= fc
+    h = h / np.sum(h)
+
+    fig, ax = dtime_plot(M, h, "respuesta_al_impulso_filtro_fir",
+                         f'Respuesta al impulso filtro FIR grado {M}')
+
+    # respuesta en frecuencia del filtro
+    w, H = freqz(h, worN=2048, fs=fs)
+    fase = np.unwrap(np.angle(H)) * 180 / np.pi
+
+    fig, ax1, ax2 = freq_response_plot(w, H, fase, show=False, fc=5e3)
+    save_plot(fig, "respuesta_en_frecuencia_pasa-bajos_fir")
+
+    # polos y ceros
+    filtro_fir_polos_y_ceros(h)
 
 ############################# Llamados a funciones ############################
 
-# time_domain
-time_domain_cancion1()
-time_domain_cancion2()
-time_domain_music_instruments()
+def primer_y_segunda_parte():
+    # time_domain
+    time_domain_cancion1()
+    time_domain_cancion2()
+    time_domain_music_instruments()
 
-# freq_domain
-freq_domain_cancion1()
-freq_domain_cancion2()
-freq_domain_spectograms()
+    # freq_domain
+    freq_domain_cancion1()
+    freq_domain_cancion2()
+    freq_domain_spectograms()
 
-freq_plot(48000, filter1_h, "filter1_h_fft", f_max=2000)
-freq_plot(48000, filter2_h, "filter2_h_fft", f_max=8000)
+    freq_plot(48000, filter1_h, "filter1_h_fft", f_max=2000)
+    freq_plot(48000, filter2_h, "filter2_h_fft", f_max=8000)
 
-a4_flauta_fseries()
-a4_clarinete_fseries()
-a4_violin_fseries()
+    a4_flauta_fseries()
+    a4_clarinete_fseries()
+    a4_violin_fseries()
 
-# obs: para realizar el filtrado se toma toda la señal no solo un periodo
-a4_flauta_cutoff()
-a4_clarinete_cutoff()
-a4_violin_cutoff()
+    # obs: para realizar el filtrado se toma toda la señal no solo un periodo
+    a4_flauta_cutoff()
+    a4_clarinete_cutoff()
+    a4_violin_cutoff()
+
+# filtro_fir()
+filtro_fir_deducido()

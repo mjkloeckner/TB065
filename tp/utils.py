@@ -139,7 +139,7 @@ def save_plot(fig, name):
 
      # crea carpeta para plots
     os.makedirs(plot_dir_name, exist_ok=True)
-    fig.savefig(save_name, dpi=150, bbox_inches="tight")
+    fig.savefig(save_name, dpi=250, bbox_inches="tight")
     plt.close(fig) # liberar memoria
 
 def save_to_wav(fs, data, save_name):
@@ -311,3 +311,119 @@ def spectogram_plot(fs, data, save_name="", t=0, dt=0, N=1024, overlp=16, win='h
         save_plot(fig, save_name)
 
     return fig, axis
+
+def bode_plot(w, H, show=True):
+    figure, axis = plt.subplots(figsize=(8, 4))
+
+    axis.plot(w, 20*np.log10(np.abs(H)))
+
+    axis.set(xlabel='Frecuencia [Hz]', ylabel='Magnitud [dB]')
+    axis.minorticks_on()
+    axis.grid(True, which='major', color='black', linestyle=':', linewidth=1.00)
+    axis.grid(True, which='minor', color='black', linestyle=':', linewidth=0.50)
+    plt.tight_layout()
+
+    axis.set_xlim(0.0, 20e3)
+
+    axis.legend(loc='upper left')
+
+    if show:
+        plt.show()
+
+    return figure, axis
+
+def freq_response_plot(w, H, phase, show=True, fc=20e3):
+    fig, ax1 = plt.subplots(figsize=(8, 4))
+
+    H_db = 20*np.log10(np.abs(H))
+
+    line1, = ax1.plot(w, H_db)
+    ax1.set(xlabel='Frecuencia [Hz]', ylabel='Magnitud [dB]')
+    ax1.minorticks_on()
+    ax1.grid(True, which='major', color='black', linestyle=':', linewidth=1.00)
+    ax1.grid(True, which='minor', color='black', linestyle=':', linewidth=0.50)
+    ax1.set_xlim(0.0, fc)
+
+    ax2 = ax1.twinx()
+    line2, = ax2.plot(w, phase, color="tab:red")
+    ax2.set_ylabel("Fase [grados]", color="black")
+    ax2.tick_params(axis='y', labelcolor="black")
+
+    # axis.yaxis.set_major_locator(MaxNLocator(nbins=5))
+    ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
+
+    # Add ONE point
+
+    # Find index closest to -3 dB
+    idx = np.argmin(np.abs(H_db + 3))    # H_db = -3 => H_db +3 = 0
+    w_3db = w[idx]
+    H_3db = H_db[idx]
+    line3 = ax1.scatter(w_3db, H_3db, color='tab:green', s=50, zorder=10)
+
+    # nyquist
+    w_nyquist = 2756.25
+    idx = np.argmin(np.abs(w - w_nyquist))    # H_db = -3 => H_db +3 = 0
+    H_nyquist = H_db[idx]
+    line4 = ax1.scatter(w_nyquist, H_nyquist, color='tab:orange', s=50, zorder=10)
+
+    ax1.legend([line1, line2, line3, line4],
+               ["Magnitud [dB]",
+                "Fase [grados]",
+                r'-3dB $\approx$ %0.0f Hz'%w_3db,
+                r'Nyquist $\approx$ %0.0f Hz'%w_nyquist],
+               loc='upper right')
+
+    plt.tight_layout()
+
+    if show:
+        plt.show()
+
+    return fig, ax1, ax2
+
+def dtime_plot(N, f, save_name="", legend="", n=0, dn=0, a=0, da=0):
+    show = True if save_name == "" else False
+
+    n = np.arange(N + 1)
+
+    fig, axis = plt.subplots(figsize=(8,4))
+    axis.set(xlabel='Tiempo discreto', ylabel='Amplitud')
+
+    markerline, stemlines, baseline = axis.stem(
+        n, f,
+        markerfmt='o',     # tipo de marcador en la cabeza
+        basefmt="k-",
+    )
+
+    markerline.set_markersize(2.0)
+    stemlines.set_linewidth(0.35)
+    baseline.set_linewidth(0.5)
+
+    stemlines.set_zorder(2)
+    markerline.set_zorder(3)
+    baseline.set_zorder(1)
+
+    axis.grid(True, which='major', color='black', linestyle=':', linewidth=1.00)
+    axis.grid(True, which='minor', color='black', linestyle=':', linewidth=0.50)
+    axis.set_xlim(0, N+1)
+    axis.set_ylim(-0.03, 0.15)
+
+    # configuracion de ticks del eje x
+    axis.xaxis.set_major_locator(MaxNLocator(nbins=15))
+    axis.xaxis.set_minor_locator(AutoMinorLocator(2))
+
+    axis.yaxis.set_minor_locator(AutoMinorLocator(2))
+
+    # axis.yaxis.set_major_locator(MaxNLocator(nbins=5))
+    # axis.yaxis.set_minor_locator(AutoMinorLocator(4))
+
+    if legend != "":
+        axis.legend([markerline], [legend], loc='upper right')
+
+    if show == False:
+        save_plot(fig, save_name)
+    else:
+        plt.show()
+
+    return fig, axis
+
+# np.linspace(start, stop, num).astype(int)
