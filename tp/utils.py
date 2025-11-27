@@ -238,15 +238,17 @@ def freq_compute_fft(fs, data, t=0, dt=0):
         di = int((t+dt)*fs)
 
     interval_data = data[i:di]
+
+    # puntos de la fft
     N = len(interval_data)
-    interval_fft = fft(interval_data) / N
-    interval_freqs = fftfreq(N, d=1/fs)
+    interval_fft = fft(interval_data, 20000)
+    interval_freqs = fftfreq(20000, d=1/fs)
 
     return interval_fft, interval_freqs
 
 # hace la transformacion a frecuencias y pasa lo transformado a `freq_graph_data`
 def freq_plot(fs, data, save_name="", f_min=0, f_max=0, y_min=0, y_max=0,
-              t=0, dt=0, a=0, da=0):
+              t=0, dt=0, a=0, da=0, show=False):
 
     interval_fft, interval_freqs = freq_compute_fft(fs, data, t, dt)
     N = len(interval_fft)
@@ -255,7 +257,7 @@ def freq_plot(fs, data, save_name="", f_min=0, f_max=0, y_min=0, y_max=0,
     x = interval_freqs[:N // 2]
     y = np.abs(interval_fft[:N // 2])
 
-    fig, ax = freq_graph_data(x, y, f_min, f_max, y_min, y_max, show=False)
+    fig, ax = freq_graph_data(x, y, f_min, f_max, y_min, y_max, show=show)
 
     if save_name != "":
         save_plot(fig, save_name)
@@ -277,7 +279,7 @@ def freq_plot_multiple(fs, data_arr, leg_arr, save_name="",
     if save_name != "":
         save_plot(fig, save_name)
 
-def spectogram_plot(fs, data, save_name="", t=0, dt=0, N=1024, overlp=16, win='hann', xlim=[], ylim=[], show=False):
+def spectogram_plot(fs, data, save_name="", t=0, dt=0, N=1024, overlp=16, win='hamm', xlim=[], ylim=[], show=False):
     if dt == 0:
         dt = (len(data)/fs)-t
 
@@ -308,7 +310,8 @@ def spectogram_plot(fs, data, save_name="", t=0, dt=0, N=1024, overlp=16, win='h
     if show == True:
         plt.show()
     else:
-        save_plot(fig, save_name)
+        if save_name != "":
+            save_plot(fig, save_name)
 
     return fig, axis
 

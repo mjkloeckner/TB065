@@ -1,7 +1,8 @@
 import numpy as np
 from scipy.io import wavfile
-from scipy.signal import firwin, freqz, tf2zpk
+from scipy.signal import firwin, freqz, tf2zpk, get_window
 from utils import *
+import librosa
 
 ## Datos
 file1_path          = 'data/cancion1.wav'
@@ -285,7 +286,6 @@ def a4_violin_fseries():
 
 cutoff = 2650    # frecuencia de corte
 M = 700          # orden FIR (número de coeficientes)
-fs = 44100
 
 def filtro_fir():
     # Diseño FIR pasabajos con ventana
@@ -333,6 +333,8 @@ def filtro_fir_polos_y_ceros(a):
 
 
 def filtro_fir_deducido():
+    fs = 44100
+
     # respuesta ideal pasabajos: sinc centrada en M/2
     n = np.arange(M + 1)
     wc = 2*np.pi*cutoff / fs
@@ -342,26 +344,62 @@ def filtro_fir_deducido():
     h_ideal = np.sinc(2.0 * (cutoff/fs) * (n - M/2))
 
     # ventana de Hamming
-    v = 0.54 - 0.46 * np.cos(2*np.pi*n/M)
+    v_hamming = 0.54 - 0.46 * np.cos(2*np.pi*n/M)
+
+    v_rectangular = []
+    for i in n:
+        v_rectangular.append(1 if i < 350 else 0)
 
     # respuesta del filtro FIR (version acotada de la sinc)
-    h = h_ideal * v
+    h = h_ideal * v_hamming
 
     # se normaliza para tener ganancia unitaria para frecuancias <= fc
     h = h / np.sum(h)
 
-    fig, ax = dtime_plot(M, h, "respuesta_al_impulso_filtro_fir",
-                         f'Respuesta al impulso filtro FIR grado {M}')
+    # fig, ax = dtime_plot(M, h, "respuesta_al_impulso_filtro_fir",
+    #                      f'Respuesta al impulso filtro FIR grado {M}')
 
     # respuesta en frecuencia del filtro
     w, H = freqz(h, worN=2048, fs=fs)
     fase = np.unwrap(np.angle(H)) * 180 / np.pi
 
-    fig, ax1, ax2 = freq_response_plot(w, H, fase, show=False, fc=5e3)
-    save_plot(fig, "respuesta_en_frecuencia_pasa-bajos_fir")
+    # fig, ax1, ax2 = freq_response_plot(w, H, fase, show=False, fc=5e3)
+    # save_plot(fig, "respuesta_en_frecuencia_pasa-bajos_fir")
 
     # polos y ceros
-    filtro_fir_polos_y_ceros(h)
+    # filtro_fir_polos_y_ceros(h)
+
+    file_path = 'canciones/000002.mp3'
+
+    file_data, file_fs = librosa.load(file_path, sr=None, mono=True)
+    file_fs = int(fs)
+
+    # spectogram_plot(file_fs, file_data,
+    #                 f"espectograma_fs_original_44100Hz", N=1024, ylim=[0, 20000])
+
+    file_filter_output = np.convolve(file_data, h, mode='same')
+
+    # spectogram_plot(file_fs, file_filter_output,
+    #                 f"espectograma_fs_{cutoff}Hz", t=0, N=1024, ylim=[0, 20000])
+
+    freq_plot(44100, v_hamming, "v_hamming_freq", f_max=8000)
+    freq_plot(44100, v_rectangular, "v_rectangular_freq", f_max=8000)
+
+    freq_compute_fft(44100, v_hamming)
+
+    for i in [512, 1024, 2048]:
+        # for window in ['boxcar', 'bartlett', 'hamming']:
+
+        #     spectogram_plot(file1_fs, file_filter_output,
+        #                     f"espectograma_submuestreado_{window}_{i:04d}", N=i,
+        #                     win=window, ylim=[0, 3000], t=5, dt=1)
+
+        N = 1024
+        beta = 8.6
+        kaiser_window = get_window(("kaiser", beta), N)
+        spectogram_plot(file1_fs, file_filter_output,
+                        f"espectograma_submuestreado_kaiser_window_{i:04d}", N=i,
+                        win=kaiser_window, ylim=[0, 3000], t=5, dt=1)
 
 ############################# Llamados a funciones ############################
 
@@ -388,5 +426,6 @@ def primer_y_segunda_parte():
     a4_clarinete_cutoff()
     a4_violin_cutoff()
 
-# filtro_fir()
+
+# primer_y_segunda_parte()
 filtro_fir_deducido()
