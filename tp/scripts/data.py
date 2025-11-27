@@ -36,10 +36,14 @@ file2_filter2_output = np.convolve(file2_data, filter2_h, mode='same')
 # todas las canciones tienen formato mp3 y 44100Hz de frecuencia de muestreo
 canciones_dataset_dir = data_dir + 'canciones/'
 canciones_dataset = []
+canciones_dataset_common_fs = 44100
 
-for filename in os.listdir(canciones_dataset_dir):
+for i, filename in enumerate(sorted(os.listdir(canciones_dataset_dir))):
     filename = canciones_dataset_dir + filename
     print(filename)
     file_data, file_fs = librosa.load(data_dir + filename, sr=None, mono=True)
     canciones_dataset.append(file_data)
     file_fs = int(file_fs)
+
+    # cargar solo una canción
+    break

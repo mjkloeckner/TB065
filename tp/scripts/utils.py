@@ -128,17 +128,28 @@ def time_plot(fs, data, save_name="", t=0, dt=0, a=0, da=0):
 
     return fig, ax
 
-def save_plot(fig, name):
+def save_plot(fig, name, overwrite=True):
     base_name = os.path.basename(name)
     file_name, ext = os.path.splitext(base_name)
     file_path_no_ext = f'{plot_dir}{file_name}'
 
     save_name = f'{file_path_no_ext}.png'
+
+    if overwrite == False:
+        if os.path.exists(save_name):
+            i = 1
+            while True:
+                new_save_name = f'{file_path_no_ext}_{i:02d}'
+                if not os.path.exists(f'{new_save_name}.png'):
+                    save_name = f'{new_save_name}.png'
+                    break
+                i += 1
+
     print(save_name)
 
      # crea carpeta para plots
     os.makedirs(plot_dir, exist_ok=True)
-    fig.savefig(save_name, dpi=250, bbox_inches="tight")
+    fig.savefig(save_name, dpi=100, bbox_inches="tight")
     plt.close(fig) # liberar memoria
 
 def save_to_wav(fs, data, save_name):
@@ -168,7 +179,7 @@ def freq_graph_multiple_data(data, f_min=0, f_max=0, y_min=0, y_max=0, show=True
         y = np.abs(fft[:N // 2])
         axis.plot(x, y, label=label, alpha=0.90, linewidth=((len(data)-i-1)*0.5 + 1.5))
 
-    axis.set(xlabel='Frecuencia [Hz]', ylabel='Magnitud')
+    axis.set(xlabel='Frecuencia [Hz]', ylabel='Magnitud [dB]')
 
     axis.minorticks_on()
     axis.grid(True, which='major', color='black', linestyle=':', linewidth=1.00)
@@ -197,12 +208,89 @@ def freq_graph_multiple_data(data, f_min=0, f_max=0, y_min=0, y_max=0, show=True
 
     return fig, axis
 
+def freq_graph_data_norm(x, y, x_min=0, x_max=0, y_min=0, y_max=0, show=True,
+                    xlabel="", ylabel=""):
 
-def freq_graph_data(x, y, f_min=0, f_max=0, y_min=0, y_max=0, show=True):
     fig, axis = plt.subplots(figsize=(8, 4))
 
     axis.plot(x, y)
-    axis.set(xlabel='Frecuencia [Hz]', ylabel='Magnitud')
+
+    if xlabel == "":
+        axis.set(xlabel='Frecuencia normalizada')
+
+    if ylabel == "":
+        axis.set(ylabel='Magnitud [dB]')
+
+    axis.minorticks_on()
+    axis.grid(True, which='major', color='black', linestyle=':', linewidth=1.00)
+    axis.grid(True, which='minor', color='black', linestyle=':', linewidth=0.50)
+
+    # configuracion de ticks del eje x
+    axis.xaxis.set_major_locator(MaxNLocator(nbins=5))
+    axis.xaxis.set_minor_locator(AutoMinorLocator(5))
+
+    axis.yaxis.set_major_locator(MaxNLocator(nbins=5))
+    axis.yaxis.set_minor_locator(AutoMinorLocator(4))
+
+    plt.tight_layout()
+
+    axis.set_xlim([x_min, x_max if x_max != 0 else 1])
+    axis.set_ylim([y_min, y_max if y_max != 0 else 1.05*max(y)])
+
+    if show:
+        plt.show()
+
+    return fig, axis
+
+def freq_graph_multiple_data_norm(x, y_arr, labels,
+                                  x_min=0, x_max=0, y_min=0, y_max=0,
+                                  show=True, xlabel="", ylabel=""):
+
+    fig, axis = plt.subplots(figsize=(8, 4))
+
+    for i, y in enumerate(y_arr):
+        axis.plot(x, y, label=labels[i], alpha=0.75)
+
+    if xlabel == "":
+        axis.set(xlabel='Frecuencia normalizada')
+
+    if ylabel == "":
+        axis.set(ylabel='Magnitud [dB]')
+
+    axis.minorticks_on()
+    axis.grid(True, which='major', color='black', linestyle=':', linewidth=1.00)
+    axis.grid(True, which='minor', color='black', linestyle=':', linewidth=0.50)
+
+    # configuracion de ticks del eje x
+    axis.xaxis.set_major_locator(MaxNLocator(nbins=5))
+    axis.xaxis.set_minor_locator(AutoMinorLocator(5))
+
+    axis.yaxis.set_major_locator(MaxNLocator(nbins=5))
+    axis.yaxis.set_minor_locator(AutoMinorLocator(4))
+
+    plt.tight_layout()
+    axis.legend(loc='upper right')
+
+    axis.set_xlim([x_min, x_max if x_max != 0 else 1])
+    axis.set_ylim([y_min, y_max if y_max != 0 else 1.05*max(y)])
+
+    if show:
+        plt.show()
+
+    return fig, axis
+
+
+def freq_graph_data(x, y, f_min=0, f_max=0, y_min=0, y_max=0, show=True,
+                    xlabel="", ylabel=""):
+    fig, axis = plt.subplots(figsize=(8, 4))
+
+    axis.plot(x, y)
+
+    if xlabel == "":
+        axis.set(xlabel='Frecuencia [Hz]')
+
+    if ylabel == "":
+        axis.set(ylabel='Magnitud')
 
     axis.minorticks_on()
     axis.grid(True, which='major', color='black', linestyle=':', linewidth=1.00)
@@ -249,9 +337,9 @@ def freq_compute_fft(fs, data, t=0, dt=0, N=0):
 
 # hace la transformacion a frecuencias y pasa lo transformado a `freq_graph_data`
 def freq_plot(fs, data, save_name="", f_min=0, f_max=0, y_min=0, y_max=0,
-              t=0, dt=0, a=0, da=0, show=False):
+              t=0, dt=0, a=0, da=0, show=False, N=0):
 
-    interval_fft, interval_freqs = freq_compute_fft(fs, data, t, dt)
+    interval_fft, interval_freqs = freq_compute_fft(fs, data, t, dt, N=N)
     N = len(interval_fft)
 
     # se toma la parte positiva en ambos casos (primer parte del arreglo)
@@ -312,7 +400,7 @@ def spectogram_plot(fs, data, save_name="", t=0, dt=0, N=1024, overlp=16, win='h
         plt.show()
     else:
         if save_name != "":
-            save_plot(fig, save_name)
+            save_plot(fig, save_name, overwrite=False)
 
     return fig, axis
 

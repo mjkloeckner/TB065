@@ -34,7 +34,16 @@ def segunda_parte():
     a4_violin_cutoff()
 
 def tercera_parte():
-    filtro_fir_deducido()
+    # h, fs = filtro_fir_deducido()
+
+    # filtro_fir_analisis(h, fs)
+
+    # for i in len(canciones_dataset):
+    #     filtro_fir_filtrar_comparar_espectogramas(
+    #             h, canciones_dataset[i], canciones_dataset_common_fs)
+
+    # analisis_freq_ventanas()
+
 
 # primera_parte()
 # segunda_parte()
