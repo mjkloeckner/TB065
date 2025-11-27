@@ -14,4 +14,4 @@ open: main
 	nohup zathura $(DOCNAME).pdf > /dev/null 2>&1 &
 
 clean:
-	rm -r *.blg *.bbl *.aux *.log __pycache__
+	rm -ff *.blg *.bbl *.aux *.lof *.out *.log

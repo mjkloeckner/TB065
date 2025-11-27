@@ -13,8 +13,7 @@ from scipy.io import wavfile
 from scipy.fft import fft, ifft, fftfreq
 from scipy.signal import spectrogram
 
-plot_dir_name = 'plot'
-out_dir_name = 'out'
+from data import *
 
 matplotlib.rcParams['font.family'] = 'Inter'
 matplotlib.rcParams['font.size'] = 12
@@ -132,13 +131,13 @@ def time_plot(fs, data, save_name="", t=0, dt=0, a=0, da=0):
 def save_plot(fig, name):
     base_name = os.path.basename(name)
     file_name, ext = os.path.splitext(base_name)
-    file_path_no_ext = f'{plot_dir_name}/{file_name}'
+    file_path_no_ext = f'{plot_dir}{file_name}'
 
     save_name = f'{file_path_no_ext}.png'
     print(save_name)
 
      # crea carpeta para plots
-    os.makedirs(plot_dir_name, exist_ok=True)
+    os.makedirs(plot_dir, exist_ok=True)
     fig.savefig(save_name, dpi=250, bbox_inches="tight")
     plt.close(fig) # liberar memoria
 
@@ -150,9 +149,9 @@ def save_to_wav(fs, data, save_name):
     data_as_int16 = np.int16(data * 32767)
 
     # crea carpeta para wavs
-    os.makedirs(out_dir_name, exist_ok=True)
+    os.makedirs(out_dir, exist_ok=True)
 
-    file_path = f'{out_dir_name}/{save_name}'
+    file_path = f'{out_dir}{save_name}'
     print(file_path)
     wavfile.write(file_path, fs, data_as_int16)
 
@@ -230,7 +229,7 @@ def freq_graph_data(x, y, f_min=0, f_max=0, y_min=0, y_max=0, show=True):
 
     return fig, axis
 
-def freq_compute_fft(fs, data, t=0, dt=0):
+def freq_compute_fft(fs, data, t=0, dt=0, N=0):
     i = 0
     di = fs*len(data)
     if t != 0 or dt != 0:
@@ -240,9 +239,11 @@ def freq_compute_fft(fs, data, t=0, dt=0):
     interval_data = data[i:di]
 
     # puntos de la fft
-    N = len(interval_data)
-    interval_fft = fft(interval_data, 20000)
-    interval_freqs = fftfreq(20000, d=1/fs)
+    if N == 0:
+        N = len(interval_data)
+
+    interval_fft = fft(interval_data, N)
+    interval_freqs = fftfreq(N, d=1/fs)
 
     return interval_fft, interval_freqs
 
