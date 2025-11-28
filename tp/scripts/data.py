@@ -39,21 +39,48 @@ canciones_dataset_dir = data_dir + 'canciones/'
 canciones_dataset = []
 canciones_dataset_common_fs = 44100
 
-i = 0
-for i, file_name in enumerate(sorted(os.listdir(canciones_dataset_dir))):
-    # if i > 3:
-    #     break
-    basename, ext = os.path.splitext(file_name)
+def cargar_canciones_dataset(count=0):
+    for i, file_name in enumerate(sorted(os.listdir(canciones_dataset_dir))):
+        if count != 0:
+            if i == count:
+                break
 
-    file_path = canciones_dataset_dir + file_name
-    print("[LOG] Cargando '" + file_path + "'")
+        basename, ext = os.path.splitext(file_name)
 
-    file_data, file_fs = librosa.load(file_path, sr=None, mono=True)
-    file_fs = int(file_fs)
-    canciones_dataset.append(SimpleNamespace(
-            name=basename,
-            path=file_path,
-            data=file_data,
-            fs=file_fs))
+        file_path = canciones_dataset_dir + file_name
+        print("[LOG] Cargando '" + file_path + "'")
 
-print(f'[LOG] Se cargaron {i} archivos')
+        file_data, file_fs = librosa.load(file_path, sr=None, mono=True)
+        file_fs = int(file_fs)
+        canciones_dataset.append(SimpleNamespace(
+                name=basename,
+                path=file_path,
+                data=file_data,
+                fs=file_fs))
+
+    print(f'[LOG] Se cargaron {i+1} archivos')
+
+canciones_prueba_dir = data_dir + 'canciones_prueba/'
+canciones_prueba = []
+
+def cargar_canciones_prueba(count=0):
+    for i, file_name in enumerate(sorted(os.listdir(canciones_prueba_dir))):
+        if count != 0:
+            if i == count:
+                break
+
+        basename, ext = os.path.splitext(file_name)
+
+        file_path = canciones_prueba_dir + file_name
+        print("[LOG] Cargando '" + file_path + "'")
+
+        file_data, file_fs = librosa.load(file_path, sr=None, mono=True)
+        file_fs = int(file_fs)
+        canciones_prueba.append(SimpleNamespace(
+                name=basename,
+                path=file_path,
+                data=file_data,
+                fs=file_fs))
+
+    print(f'[LOG] Se cargaron {i+1} archivos')
+

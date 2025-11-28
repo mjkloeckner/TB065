@@ -149,16 +149,16 @@ def analisis_freq_ventanas():
 
 def comparacion_de_espectrogramas_filtrado_vs_original(h):
     for i, cancion in enumerate(canciones_dataset):
-        spectogram_plot(cancion.fs, cancion.data,
-                        f'{cancion.name}_espectograma_original_44100Hz',
+        spectrogram_plot(cancion.fs, cancion.data,
+                        f'{cancion.name}_espectrograma_original_44100Hz',
                         N=1024, ylim=[0, 20000])
 
         filter_output = np.convolve(cancion.data, h, mode='same')
-        spectogram_plot(cancion.fs, filter_output,
-                        f'{cancion.name}_espectograma_filtrado_{cutoff}Hz',
+        spectrogram_plot(cancion.fs, filter_output,
+                        f'{cancion.name}_espectrograma_filtrado_{cutoff}Hz',
                         N=1024, ylim=[0, 20000])
 
-        spectogram_plot(cancion.fs, filter_output,
+        spectrogram_plot(cancion.fs, filter_output,
                         f'{cancion.name}_espectrograma_filtrado_{cutoff}Hz_ylim_3000Hz_inferno',
                         cmap='inferno', ylim=[0, 3000], N=4096, win='hamming')
 
@@ -188,13 +188,37 @@ def generar_base_de_datos():
         # E = obtener_caracteristicas(E)
 
         H = generar_huella(E, fs)
-        # graficar_huella(H, f'huella_acustica_{cancion.name}', xlim=[0, 100])
+
+        # if i == 0:
+        #     graficar_huella(H, f'{cancion.name}_huella_acustica_completa')
+
+        # graficar_huella(H, f'{cancion.name}_huella_acustica', xlim=[0, 100])
         DB = guardar_huella(i, H, DB)
 
     with open(f'{database_name}', 'wb') as f:
         pickle.dump(DB, f)
 
     print(f'[LOG] Base de datos guardada en `./{database_name}`')
+    return DB
+
+def generar_base_de_datos_si_no_existe():
+    if os.path.exists(database_name):
+        print(f'[LOG] Base de datos ya existe en `./{database_name}`, pasando...')
+        try:
+            with open(database_name, 'rb') as db_file:
+                DB = pickle.load(db_file)
+
+            print(f"[LOG] Se cargaron los archivos de `{database_name}`")
+
+        except FileNotFoundError:
+            print(f"[ERROR] No se encontro el archivo `{database_name}`")
+        except EOFError:
+            print(f"[ERROR] El archivo `{database_name}` puede estar incompleto o corrupto")
+        except Exception as e:
+            print(f"[ERROR] Ocurrio un error inesperado: {e}")
+    else:
+        DB = generar_base_de_datos()
+
     return DB
 
 # calcula la matriz de características dado un espectrograma `E`
@@ -255,25 +279,18 @@ def dividir_en_bandas_logaritmicas(Sxx, fs, n_bandas, fmin, fmax):
 def generar_huella(E, fs):
     E_db = dividir_en_bandas_logaritmicas(E, fs, 21, 300, 2000)
 
-    # E_db tiene dimensiones (m, n) -> (N_BANDAS, N_FRAMES)
+    # E_db tiene dimensiones (m, n) -> (n_bandas, n_frames)
     num_bandas, num_frames = E_db.shape
 
-    # La huella H(m, n) tendrá dimensiones (N_BANDAS - 1, N_FRAMES - 1)
+    # La huella H(m, n) tendrá dimensiones (n_bandas - 1, n_frames - 1)
     H = np.zeros((num_bandas - 1, num_frames - 1), dtype=int)
 
-    # Bucle para aplicar la lógica F(m, n)
     # n: tiempo (frame), m: banda
     for n in range(1, num_frames):    # n: empieza en 1 (segundo frame)
         for m in range(num_bandas - 1): # m: va de la primera hasta la penúltima banda
-
-            # TÉRMINO IZQUIERDO (Frame actual 'n'): E(m,n) - E(m+1, n)
             diff_actual = E_db[m, n] - E_db[m + 1, n]
-
-            # TÉRMINO DERECHO (Frame anterior 'n-1'): E(m, n-1) - E(m+1, n-1)
             diff_anterior = E_db[m, n - 1] - E_db[m + 1, n - 1]
 
-            # Lógica F(m, n)
-            # F(m,n) = 1 si la diferencia de energía en el tiempo actual es mayor que la anterior.
             if diff_actual > diff_anterior:
                 H[m, n - 1] = 1 # Se mapea n-1 al índice de la matriz H
             else:
@@ -281,7 +298,7 @@ def generar_huella(E, fs):
 
     return H
 
-def graficar_huella(H, save_name="", xlim=[], ylim=[]):
+def graficar_huella(H, save_name="", xlim=[], ylim=[], save_dir=""):
     fig, axis = plt.subplots(figsize=(8, 4))
     plt.pcolormesh(H, shading='auto', cmap='binary')
 
@@ -301,7 +318,7 @@ def graficar_huella(H, save_name="", xlim=[], ylim=[]):
     if save_name == "":
         plt.show()
     else:
-        save_plot(fig, save_name)
+        save_plot(fig, save_name, save_dir=save_dir)
 
 def guardar_huella(ID, huella, DB):
     """
@@ -446,6 +463,28 @@ def query_DB(DB, huella):
 
     return ID.astype(np.uint32), MATCHES.astype(np.uint32)
 
+def evaluar_cancion(DB, cancion):
+    h, fs = filtro_fir_deducido()
+
+    nro_pruebas = 0
+    data = np.convolve(cancion.data, h, mode='same')
+    print(f'[LOG] Evaluando cancion `{cancion.path}`')
+    duracion_cancion = len(data) / cancion.fs
+    print(f'[LOG] Duracion cancion: {duracion_cancion:05.02f}s')
+    for r in range(0, 10):
+        for T in [5, 10, 20]: # segmentso de 5, 10 y 20 segundos
+            t_inicial = random.uniform(0.0, 1.0) * (duracion_cancion - 1.5*T)
+            t_inicial = 0 if t_inicial < 0 else t_inicial
+            print(f'[LOG] Intervalo {t_inicial:05.02f}:{t_inicial+T:05.02f}s', end='')
+            f, t, E = generate_spectrogram(cancion.fs, data, t=t_inicial, dt=T)
+            H = generar_huella(E, cancion.fs)
+
+            nro_pruebas += 1
+            id, matches = query_DB(DB, H)
+
+            print(f' mejor coincidencia: `{canciones_dataset[id[0]].name}`')
+    print("")
+
 def evaluar_aciertos(DB):
     h, fs = filtro_fir_deducido()
 
@@ -456,12 +495,12 @@ def evaluar_aciertos(DB):
         print(f'[LOG] Evaluando cancion `{cancion.path}`')
         duracion_cancion = len(data) / cancion.fs
         print(f'[LOG] Duracion cancion: {duracion_cancion:05.02f}s')
-        for r in range(0, 50):
+        for r in range(0, 10):
             for T in [5, 10, 20]: # segmentso de 5, 10 y 20 segundos
                 t_inicial = random.uniform(0.0, 1.0) * (duracion_cancion - 1.5*T)
                 t_inicial = 0 if t_inicial < 0 else t_inicial
                 print(f'[LOG] Intervalo {t_inicial:05.02f}:{t_inicial+T:05.02f}s', end='')
-                f, t, E = generate_spectogram(cancion.fs, data, t=t_inicial, dt=T)
+                f, t, E = generate_spectrogram(cancion.fs, data, t=t_inicial, dt=T)
                 H = generar_huella(E, cancion.fs)
 
                 nro_pruebas += 1

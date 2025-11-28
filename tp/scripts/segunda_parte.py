@@ -27,11 +27,11 @@ def freq_domain_spectograms():
     for i in [512, 1024, 2048]:
         for window in ['boxcar', 'bartlett', 'hann', 'hamming']:
             spectogram_plot(file1_fs, file1_data,
-                            f"cancion1_espectograma_{window}_{i:04d}", N=i,
+                            f"cancion1_espectrograma_{window}_{i:04d}", N=i,
                             win=window, ylim=[0, 17500])
 
             spectogram_plot(file2_fs, file2_data,
-                            f"cancion2_espectograma_{window}_{i:04d}", t=6, N=i,
+                            f"cancion2_espectrograma_{window}_{i:04d}", t=6, N=i,
                             win=window, ylim=[0, 8000])
 
 def a4_flauta_cutoff():

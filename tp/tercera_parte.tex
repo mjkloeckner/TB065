@@ -8,6 +8,25 @@ secciones previas. El objetivo es implementar una herramienta que analice un son
 musical, particularmente una canción en formato digital, e identifique la
 canción basándose en una lista de canciones analizadas previamente.
 
+El procedimiento básico consiste en analizar el segmento de audio, 
+extraer características particulares en el espacio tiempo-frecuencia (es
+decir, en su espectrograma) que sirvan para identificarlo luego. Al conjunto de estas características se las denomina huella digital acústica, ya que es análogo a como una huella dactilar se identifica por las convergencias, desviaciones, interrupciones y demás particularidades de las crestas papilares. Este procedimiento de extracción de huellas se utiliza tanto para confeccionar la base de datos de canciones conocidas como para posteriormente reconocer segmentos de audio sin identificar, consultando la base de datos.
+
+El sistema de reconocimiento consta de dos bloques principales:
+\begin{itemize}
+  \item El algoritmo para extraer las huellas digitales acústicas.
+  \item La base de datos que almacena las huellas acústicas de las canciones conocidas.
+\end{itemize}
+
+El algoritmo para extraer las huellas acústicas toma como entrada el archivo con el audio y, luego de un pre-procesamiento de la señal, extrae las características y entrega como resultado la huella acústica, tal como se muestra en la figura \ref{fig-diagrama-bloques-general}.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\linewidth]{img/diagrama_de_bloques_general.png}
+    \caption{Diagrama de bloques sistema de reconocimiento}
+    \label{fig-diagrama-bloques-general}
+\end{figure}
+
 \hypertarget{reduccion-de-frecuencia}{%
 \subsection{Reducción de frecuencia}\label{reduccion-de-frecuencia}}
 
@@ -26,9 +45,9 @@ Para reducir la frecuencia de muestreo de la señal discreta de $44100$Hz a $551
     \label{eq-señal-submuestreada}
 \end{align}
 
-El diagrama debloques del sistema a utilizar se compone de un filtro pasa-bajos y luego un muestreador o compresor de la señal en dominio temporal como se muestra en la figura \ref{fig-diagrama-de-bloques-decimador}, en la cual $x(n)$ representa la señal de entrada y $x_{d}(n)$ la señal decimada. El filtro pasa-bajos se utiliza para evitar aliasing si la señal de entrada $x_{n}$ no permite decimación en $8$ veces, es decir, tiene ancho de banda mayor a $2\pi/8$ o en frecuencia siendo $5512.5$Hz
+El diagrama de bloques del sistema a utilizar se compone de un filtro pasa-bajos y luego un muestreador o compresor de la señal en dominio temporal como se muestra en la figura \ref{fig-diagrama-de-bloques-decimador}, en la cual $x(n)$ representa la señal de entrada y $x_{d}(n)$ la señal decimada. El filtro pasa-bajos se utiliza para evitar aliasing si la señal de entrada $x_{n}$ no permite decimación en $8$ veces, es decir, tiene ancho de banda mayor a $2\pi/8$ o en frecuencia siendo $5512.5$Hz
 
-\begin{figure}[!ht]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=0.75\linewidth]{img/diagrama_de_bloques-decimador.png}
     \caption{Diagrama de bloques reducción de frecuencia}
@@ -89,7 +108,7 @@ Para la ventana se utiliza la ventana de Hamming, ya que es muy simple la implem
 
 Teniendo la expresión de la ventana $w(n)$ y la respuesta al impulso del filtro ideal $h_{ideal}(n)$ se obtiene la respuesta al impulso del filtro FIR $h(n)$ de la ecuación \ref{eq-ventaneo}, en este caso tomando 700 coeficientes, es decir, se tiene un filtro de grado 700. La respuesta al impulso se muestra graficada en la figura \ref{fig-respuesta-al-impulso-fir} en la cual se ve claramente la forma de la función sinc.
 
-\begin{figure}[!ht]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=\linewidth]{plot/respuesta_al_impulso_filtro_fir.png}
     \caption{Respuesta al impulso filtro pasa-bajos FIR de grado $700$}
@@ -98,14 +117,14 @@ Teniendo la expresión de la ventana $w(n)$ y la respuesta al impulso del filtro
 
 La respuesta en frecuencia del filtro se obtiene tomando $z=j\omega$ en la función de transferencia del sistema $H(z)$ mencionada previamente en la ecuación \ref{fig-respuesta-en-freq-fir}. En la figura \ref{fig-respuesta-en-freq-fir} se grafica la respuesta en frecuencia del filtro pasa-bajos elegido, la magnitud se muestra en color azul y la fase en color rojo. Se nota que a partir de la frecuencia de corte ($2627.1$ Hz, correspondiente al punto de $-3$dB) se atenúan drásticamente las señales y en particular para las frecuencias mayores a la de Nyquist ($2756.2$ Hz) ya se puede decir prácticamente que se atenúan por completo ya que se tiene una ganancia de $-60dB$, esto es $0.001$ veces, lo cual era el objetivo para evitar aliasing al decimar. Además se observa la fase lineal hasta la frecuencia de corte, esta es una de las principales características de los filtros FIR por sobre los IIR, que es que no distorsionan la fase. 
 
-\begin{figure}[!ht]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=\linewidth]{plot/respuesta_en_frecuencia_pasa-bajos_fir.png}
     \caption{Respuesta en frecuencia filtro pasa-bajos FIR de grado $700$}
     \label{fig-respuesta-en-freq-fir}
 \end{figure}
 
-Los ceros $z_{i}$ y polos $p_{i}$ se definen como aquellos puntos del plano complejo en donde la función de transferencia del sistema $H(jw)$ se anula, en el caso de los ceros y diverge a infinito, en el caso de los polos. La particularidad de los filtros FIR es que no tienen polos distintos de cero, esto sale de analizar la ecuación \ref{eq-transferencia-filtro-fir}, se tiene una sumatoria de coeficientes no nulos constantes multiplicados por la variable $z^{-1}$, la única forma de que la transferencia tienda a infinito es que la variable z tienda a $0$ de manera de que $z^{-1}$ diverja.
+Los ceros $z_{i}$ y polos $p_{i}$ se definen como aquellos puntos del plano complejo en donde la función de transferencia del sistema $H(j\omega)$ se anula, en el caso de los ceros y diverge a infinito, en el caso de los polos. La particularidad de los filtros FIR es que no tienen polos distintos de cero, esto sale de analizar la ecuación \ref{eq-transferencia-filtro-fir}, se tiene una sumatoria de coeficientes no nulos constantes multiplicados por la variable $z^{-1}$, la única forma de que la transferencia tienda a infinito es que la variable z tienda a $0$ de manera de que $z^{-1}$ diverja.
 
 %ve factorizando la expresión de la ecuación \ref{eq-transferencia-filtro-fir} como se muestra en la ecuación \ref{eq-transferencia-filtro-fir-factorizada}. 
 
@@ -114,9 +133,96 @@ Los ceros $z_{i}$ y polos $p_{i}$ se definen como aquellos puntos del plano comp
 %    \label{eq-transferencia-filtro-fir-factorizada}
 %\end{align}
 
-\begin{figure}[!ht]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=\linewidth]{plot/polos_y_ceros_pasa-bajos_fir.png}
     \caption{Polos y ceros filtro pasa-bajos FIR de grado $700$}
-    \label{fig-respuesta-en-freq-fir}
+    \label{fig-polos_y_ceros_pasa-bajos_fir}
 \end{figure}
+
+La principal ventaja de utilizar la ventana de Hamming en lugar de la rectangular al realizar un espectrograma es la reducción drástica de la fuga espectral, lo que resulta en una representación de frecuencia más limpia y precisa de las señales en el tiempo.
+
+Cuando se calcula un espectrograma, el proceso implica dividir la señal continua en pequeños segmentos (ventanas) para calcular la Transformada Rápida de Fourier (FFT) de cada segmento.
+
+La ventana rectangular es un corte brusco de la señal. Cuando esta ventana se multiplica con la señal en el dominio del tiempo, crea una discontinuidad en los puntos de inicio y fin de la ventana.
+
+En el dominio de la frecuencia, esta discontinuidad se traduce en un espectro con lóbulos laterales muy altos (el primer lóbulo está a solo 13 dB por debajo del pico principal).
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\linewidth]{plot/potencia_db_espectro_ventana_comparacion_hamming_rect.png}
+    \caption{Comparación potencia de ventana rectangular y Hamming}
+    \label{fig-potencia_db_espectro_ventana_comparacion_hamming_rect}
+\end{figure}
+
+La ventana de Hamming tiene un lóbulo principal ligeramente más ancho que la rectangular, lo que resulta en una peor resolución de frecuencia (es más difícil distinguir dos frecuencias muy, muy cercanas)
+
+\iffalse
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\linewidth]{plot/espectograma_fs_original_44100Hz.png}
+    \caption{Espectrograma muestra `000002.mp3` original}
+    \label{fig-espectograma_fs_original_44100Hz}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\linewidth]{plot/espectograma_fs_2650Hz.png}
+    \caption{Espectrograma muestra `000002.mp3` filtrado}
+    \label{fig-espectograma_fs_2650Hz}
+\end{figure}
+\fi
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\linewidth]{plot/000002_espectrograma_filtrado_2650Hz_ylim_3000Hz_inferno.png}
+    \caption{Espectrograma muestra `000002.mp3` filtrado}
+    \label{fig-espectrograma_000002}
+\end{figure}
+
+\hypertarget{generacion-de-huella}{%
+\subsection{Generación de huellas acústicas}\label{generacion-de-huella}}
+
+El algoritmo de extracción de huellas digitales acústicas extrae características a partir del espectrograma del
+audio. El conjunto de estas características conforman la huella.
+
+Las características se obtienen mediante una función signo $F(m,n)$ que opera sobre la energía de las bandas $E(m,n)$ según la ecuación \ref{eq-energia-de-banda}, donde $n$ es el tiempo y $m$ la banda de frecuencia.
+
+\begin{align}
+    F (m, n) = \left\{
+    \begin{array}{rl}
+        1 & E(m, n) - E(n, m+1) > E(n-1, m) - E(n-1, m+1)\\
+        0 & \mbox{en otro caso}
+    \end{array}
+    \right.
+    \label{eq-energia-de-banda}
+\end{align}
+
+En la figura \ref{fig-huella_acustica_000002_completa} se muestra un gráfico de la huella generada para una canción de muestra `000002.mp3` utilizando el algoritmo mencionado previamente. Luego en la figura \ref{fig-huella_acustica_000002_segmento} se toma el segmento de $0$ a $100$ de manera que se aprecie aun mejor el patrón de unos y ceros. En la figura \ref{fig-huella_acustica_000141} se grafica la huella de otra muestra para el mismo segmento anterior, de $0$ a $100$, nótese la diferencia entre el patrón generado.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\linewidth]{plot/000002_huella_acustica_completa.png}
+    \caption{Huella acústica muestra `000002.mp3` completa}
+    \label{fig-huella_acustica_000002_completa}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\linewidth]{plot/000002_huella_acustica.png}
+    \caption{Huella acústica muestra `000002.mp3` segmento}
+    \label{fig-huella_acustica_000002_segmento}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\linewidth]{plot/000141_huella_acustica.png}
+    \caption{Huella acústica muestra `000141.mp3`}
+    \label{fig-huella_acustica_000141}
+\end{figure}
+
+\pagebreak
+\hypertarget{resultados}{%
+\subsection{Resultados}\label{resultados}}
+
+Utilizando 16 canciones de muestra, se generaron las huellas como se menciono previamente y se cargaron estas huellas a la base de datos. Para verificar cual es el error al identificar canciones se generaron pruebas procedurales, en particular se genero un total de $2550$ identificaciones de las cuales $29$ fueron erróneas, esto resulta en un error porcentual de $1.14$\%. En una primera instancia el error fue mayor, pero se corrigió mediante el ajuste del ancho de ventana y del ancho de solapamiento, a la hora de calcular el espectrograma para generar la huella de las canciones de muestra (las que se guardan en la base de datos).

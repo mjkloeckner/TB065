@@ -16,7 +16,6 @@ def primera_parte():
     time_domain_music_instruments()
 
 def segunda_parte():
-    freq_domain
     freq_domain_cancion1()
     freq_domain_cancion2()
     freq_domain_spectograms()
@@ -35,15 +34,15 @@ def segunda_parte():
 
 def tercera_parte():
     # h, fs = filtro_fir_deducido()
-
     # filtro_fir_analisis(h, fs)
-
     # analisis_freq_ventanas()
-
     # comparacion_de_espectrogramas_filtrado_vs_original(h)
+    DB = generar_base_de_datos_si_no_existe()
+    # evaluar_aciertos(DB)
+    evaluar_cancion(DB, canciones_dataset[0])
 
-    DB = generar_base_de_datos()
-    evaluar_aciertos(DB)
+cargar_canciones_dataset()
+cargar_canciones_prueba()
 
 # primera_parte()
 # segunda_parte()

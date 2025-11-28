@@ -128,10 +128,17 @@ def time_plot(fs, data, save_name="", t=0, dt=0, a=0, da=0):
 
     return fig, ax
 
-def save_plot(fig, name, overwrite=True):
+def save_plot(fig, name, overwrite=True, save_dir=""):
     base_name = os.path.basename(name)
     file_name, ext = os.path.splitext(base_name)
-    file_path_no_ext = f'{plot_dir}{file_name}'
+
+    if save_dir == "":
+        save_dir = plot_dir
+
+    if save_dir != "" and not save_dir.endswith('/'):
+        save_dir += "/"
+
+    file_path_no_ext = f'{save_dir}{file_name}'
 
     save_name = f'{file_path_no_ext}.png'
 
@@ -149,7 +156,7 @@ def save_plot(fig, name, overwrite=True):
 
      # crea carpeta para plots
     os.makedirs(plot_dir, exist_ok=True)
-    fig.savefig(save_name, dpi=250, bbox_inches="tight")
+    fig.savefig(save_name, dpi=100, bbox_inches="tight")
     plt.close(fig) # liberar memoria
 
 def save_to_wav(fs, data, save_name):
@@ -163,7 +170,7 @@ def save_to_wav(fs, data, save_name):
     os.makedirs(out_dir, exist_ok=True)
 
     file_path = f'{out_dir}{save_name}'
-    print(file_path)
+    print(f'[LOG] Guardando audio: `{file_path}')
     wavfile.write(file_path, fs, data_as_int16)
 
 # frecuencia
@@ -368,7 +375,7 @@ def freq_plot_multiple(fs, data_arr, leg_arr, save_name="",
     if save_name != "":
         save_plot(fig, save_name)
 
-def generate_spectogram(fs, data, t=0, dt=0, N=1024, overlp=16, win='hamm'):
+def generate_spectrogram(fs, data, t=0, dt=0, N=1024, overlp=16, win='hamm'):
     if dt == 0:
         dt = (len(data)/fs)-t
 
@@ -381,16 +388,16 @@ def generate_spectogram(fs, data, t=0, dt=0, N=1024, overlp=16, win='hamm'):
     f, time, Sxx = spectrogram(interval_data, fs=fs, nperseg=N, noverlap=overlp,
                                window=win)
 
-    return f, t, Sxx
+    return f, time, Sxx
 
-def spectogram_plot(fs, data, save_name="", t=0, dt=0, N=1024,
+def spectrogram_plot(fs, data, save_name="", t=0, dt=0, N=1024,
                     overlp=16, win='hamm', xlim=[], ylim=[],
                     shading='gouraud', cmap='viridis', show=False):
 
-    f, time, Sxx = generate_spectogram(fs, data, t, dt, N, overlp, win)
+    f, time, Sxx = generate_spectrogram(fs, data, t, dt, N, overlp, win)
     fig, axis = plt.subplots(figsize=(8, 4))
 
-    # plt.pcolormesh(time, f, Sxx**0.10, shading='gouraud')
+    # plt.pcolormesh(time, f, Sxx**0.10)
     plt.pcolormesh(time, f, 10*np.log10(Sxx + 1e-12), shading=shading, cmap=cmap)
 
     plt.ylabel('Frecuencia [Hz]')
