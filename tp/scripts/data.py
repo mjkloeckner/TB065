@@ -2,6 +2,7 @@ from scipy.io import wavfile
 import numpy as np
 import librosa
 import os
+from types import SimpleNamespace
 
 data_dir = '../data/'
 plot_dir = '../plot/'
@@ -38,12 +39,21 @@ canciones_dataset_dir = data_dir + 'canciones/'
 canciones_dataset = []
 canciones_dataset_common_fs = 44100
 
-for i, filename in enumerate(sorted(os.listdir(canciones_dataset_dir))):
-    filename = canciones_dataset_dir + filename
-    print(filename)
-    file_data, file_fs = librosa.load(data_dir + filename, sr=None, mono=True)
-    canciones_dataset.append(file_data)
-    file_fs = int(file_fs)
+i = 0
+for i, file_name in enumerate(sorted(os.listdir(canciones_dataset_dir))):
+    # if i > 3:
+    #     break
+    basename, ext = os.path.splitext(file_name)
 
-    # cargar solo una canción
-    break
+    file_path = canciones_dataset_dir + file_name
+    print("[LOG] Cargando '" + file_path + "'")
+
+    file_data, file_fs = librosa.load(file_path, sr=None, mono=True)
+    file_fs = int(file_fs)
+    canciones_dataset.append(SimpleNamespace(
+            name=basename,
+            path=file_path,
+            data=file_data,
+            fs=file_fs))
+
+print(f'[LOG] Se cargaron {i} archivos')

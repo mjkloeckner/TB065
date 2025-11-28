@@ -38,12 +38,12 @@ def tercera_parte():
 
     # filtro_fir_analisis(h, fs)
 
-    # for i in len(canciones_dataset):
-    #     filtro_fir_filtrar_comparar_espectogramas(
-    #             h, canciones_dataset[i], canciones_dataset_common_fs)
-
     # analisis_freq_ventanas()
 
+    # comparacion_de_espectrogramas_filtrado_vs_original(h)
+
+    DB = generar_base_de_datos()
+    evaluar_aciertos(DB)
 
 # primera_parte()
 # segunda_parte()

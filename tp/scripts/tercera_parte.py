@@ -1,6 +1,10 @@
 from utils import *
 from scipy.signal import firwin, freqz, tf2zpk, get_window
 from scipy.fft import fftshift
+import random
+
+import pickle
+database_name = 'database.pkl'
 
 ############################# Tercera parte ###################################
 
@@ -92,17 +96,6 @@ def filtro_fir_analisis(h, fs):
     # polos y ceros
     filtro_fir_polos_y_ceros(h)
 
-def filtro_fir_filtrar_comparar_espectogramas(h, data, fs):
-    spectogram_plot(fs, data,
-                    f"filtro_fir_espectograma_original_44100Hz",
-                    N=1024, ylim=[0, 20000])
-
-    filter_output = np.convolve(data, h, mode='same')
-    spectogram_plot(fs, filter_output,
-                    f"filtro_fir_espectograma_filtrada_{cutoff}Hz",
-                    t=0, N=1024, ylim=[0, 20000])
-
-
 def analisis_freq_ventanas():
     N = 1024
 
@@ -154,52 +147,331 @@ def analisis_freq_ventanas():
 
     save_plot(fig, "potencia_db_espectro_ventana_comparacion_hamming_rect")
 
-    # plt.figure(figsize=(10, 6))
-    # plt.plot(f, v_rect_potencia_db,
-    #         label='Ventana Rectangular', linewidth=2, color='tab:blue')
+def comparacion_de_espectrogramas_filtrado_vs_original(h):
+    for i, cancion in enumerate(canciones_dataset):
+        spectogram_plot(cancion.fs, cancion.data,
+                        f'{cancion.name}_espectograma_original_44100Hz',
+                        N=1024, ylim=[0, 20000])
 
-    # Gráfico de la Ventana de Hamming
-    # plt.plot(f, v_hamm_potencia_db,
-    #         label='Ventana de Hamming', linewidth=2, color='tab:orange')
+        filter_output = np.convolve(cancion.data, h, mode='same')
+        spectogram_plot(cancion.fs, filter_output,
+                        f'{cancion.name}_espectograma_filtrado_{cutoff}Hz',
+                        N=1024, ylim=[0, 20000])
 
-    # Enfocarse en el lóbulo principal
-    # plt.xlim(-0.1, 0.1)
+        spectogram_plot(cancion.fs, filter_output,
+                        f'{cancion.name}_espectrograma_filtrado_{cutoff}Hz_ylim_3000Hz_inferno',
+                        cmap='inferno', ylim=[0, 3000], N=4096, win='hamming')
 
-    # Configuración del Gráfico
-    # plt.title('Comparación de Espectros de Potencia de Ventanas (Escala Logarítmica)')
-    # plt.xlabel('Frecuencia Normalizada (f/Fs)')
-    # plt.ylabel('Potencia Normalizada (dB)')
+def generar_base_de_datos():
+    h, fs = filtro_fir_deducido()
 
-    # Limitar el eje Y para ver bien los lóbulos laterales
-    # plt.ylim(-100, 5) 
+    DB = {
+        'hash_nbits': 20,      # Cantidad de bits de los hashes
+        'n_entries': 20,       # Cantidad de columnas de la tabla
+        'ID_nbits': 12,        # Cantidad de bits para ID numérico de la canción
+        'tabla': np.zeros((2 ** 20, 20), dtype=np.uint32)
+    }
 
-    # Limitar el eje X para enfocarse en el lóbulo principal
-    # plt.xlim(-0.1, 0.1) 
+    for i, cancion in enumerate(canciones_dataset):
+        data_filtered = np.convolve(cancion.data, h, mode='same')
 
-    # plt.grid(True, which="both", linestyle='--', alpha=0.7)
-    # plt.legend()
-    # plt.show()
+        # Sxx es la matriz de energía donde el eje `y` es frecuencia (m) y
+        # el eje `x` es tiempo (n).
+        #
+        # `nperseg`  tamaño de ventana (número de muestras por segmento)
+        # `noverlap` cantidad de solapamiento entre ventanas
+        f, t, E = spectrogram(data_filtered, fs=cancion.fs,
+                nperseg=1024, noverlap=24, window='hamm')
 
-    # freq_plot(44100, v_hamming_potencia, "v_hamming_potencia", f_max=20000, N=8192)
-    # freq_plot(44100, v_rectangular_potencia, "v_rectangular_potencia", f_max=20000, N=8192)
+        # E.shape retorna (num_bandas, num_frames) -> (m, n)
+        # num_bandas, num_frames = E.shape
+        # E = obtener_caracteristicas(E)
 
-    # interval_fft, interval_freqs = freq_compute_fft(fs, data, t, dt, N=N)
-    # interval_fft, interval_freqs = freq_compute_fft(fs, data, t, dt, N=N)
+        H = generar_huella(E, fs)
+        # graficar_huella(H, f'huella_acustica_{cancion.name}', xlim=[0, 100])
+        DB = guardar_huella(i, H, DB)
 
-    # f = np.linspace(-0.5, 0.5, n_fft)
+    with open(f'{database_name}', 'wb') as f:
+        pickle.dump(DB, f)
 
-    # filter_output = np.convolve(data, h, mode='same')
+    print(f'[LOG] Base de datos guardada en `./{database_name}`')
+    return DB
 
-    # for i in [512, 1024, 2048]:
-    #     # for window in ['boxcar', 'bartlett', 'hamming']:
+# calcula la matriz de características dado un espectrograma `E`
+def obtener_caracteristicas(E):
+    bandas_totales = 21  # Número de bandas de frecuencia (M)
+    f_min = 300          # Frecuencia inferior de la primera banda (300 Hz)
+    f_max = 2000         # Frecuencia superior de la última banda (2 kHz)
 
-    #     #     spectogram_plot(file1_fs, file_filter_output,
-    #     #                     f"espectograma_submuestreado_{window}_{i:04d}", N=i,
-    #     #                     win=window, ylim=[0, 3000], t=5, dt=1)
+    num_bandas, num_frames = E.shape
 
-    #     N = 1024
-    #     beta = 8.6
-    #     kaiser_window = get_window(("kaiser", beta), N)
-    #     spectogram_plot(canciones_dataset_common_fs, filter_output,
-    #                     f"espectograma_submuestreado_kaiser_window_{i:04d}", N=i,
-    #                     win=kaiser_window, ylim=[0, 3000], t=5, dt=1)
+    # La matriz F tendrá una fila menos (m+1 en E) y una columna menos (n-1 en E)
+    # num_bandas_F = num_bandas - 1 (para evitar el desbordamiento de m+1)
+    # num_frames_F = num_frames - 1 (para evitar el desbordamiento de n-1)
+    F = np.zeros((num_bandas - 1, num_frames - 1), dtype=int)
+
+    # Se itera sobre todas las bandas y frames que permiten la comparación
+    for n in range(1, num_frames):      # n: tiempo (frame actual)
+        for m in range(num_bandas - 1): # m: banda
+            # Diferencia de energía entre banda m y m+1 en el tiempo 'n'
+            diff_actual = E[m, n] - E[m + 1, n]
+
+            # Frame anterior 'n-1'
+            # Diferencia de energía entre banda m y m+1 en el tiempo 'n-1'
+            diff_anterior = E[m, n - 1] - E[m + 1, n - 1]
+
+            # Lógica de la Función Signo F(m, n)
+            if diff_actual > diff_anterior:
+                F[m, n - 1] = 1 # Se mapea n al índice correcto de la matriz F
+            else:
+                F[m, n - 1] = 0
+
+    return F
+
+def dividir_en_bandas_logaritmicas(Sxx, fs, n_bandas, fmin, fmax):
+    # crear la matriz de filtros logarítmicos (Mel)
+    # `n_fft` para librosa, debe ser el doble del número de filas de frecuencia
+    # menos 2
+    n_fft_librosa = (Sxx.shape[0] - 1) * 2
+
+    mel_basis = librosa.filters.mel(
+        sr=fs,
+        n_fft=n_fft_librosa,
+        n_mels=n_bandas,
+        fmin=fmin,
+        fmax=fmax)
+
+    # multiplicar la matriz de filtros por el espectrograma de potencia
+    # E_banda tendrá dimensiones (21 bandas, N_FRAMES) -> E(m, n)
+    E_banda = np.dot(mel_basis, Sxx)
+
+    # convertir la energía de las bandas a dB para aplicar la función F(m, n)
+    # F(m,n) debe operar sobre la energía en dB para ser robusta.
+    # se usa la referencia absoluta (ref=1.0) para que 0dB sea el nivel absoluto.
+    E_db = librosa.power_to_db(E_banda, ref=1.0)
+    return E_db
+
+
+def generar_huella(E, fs):
+    E_db = dividir_en_bandas_logaritmicas(E, fs, 21, 300, 2000)
+
+    # E_db tiene dimensiones (m, n) -> (N_BANDAS, N_FRAMES)
+    num_bandas, num_frames = E_db.shape
+
+    # La huella H(m, n) tendrá dimensiones (N_BANDAS - 1, N_FRAMES - 1)
+    H = np.zeros((num_bandas - 1, num_frames - 1), dtype=int)
+
+    # Bucle para aplicar la lógica F(m, n)
+    # n: tiempo (frame), m: banda
+    for n in range(1, num_frames):    # n: empieza en 1 (segundo frame)
+        for m in range(num_bandas - 1): # m: va de la primera hasta la penúltima banda
+
+            # TÉRMINO IZQUIERDO (Frame actual 'n'): E(m,n) - E(m+1, n)
+            diff_actual = E_db[m, n] - E_db[m + 1, n]
+
+            # TÉRMINO DERECHO (Frame anterior 'n-1'): E(m, n-1) - E(m+1, n-1)
+            diff_anterior = E_db[m, n - 1] - E_db[m + 1, n - 1]
+
+            # Lógica F(m, n)
+            # F(m,n) = 1 si la diferencia de energía en el tiempo actual es mayor que la anterior.
+            if diff_actual > diff_anterior:
+                H[m, n - 1] = 1 # Se mapea n-1 al índice de la matriz H
+            else:
+                H[m, n - 1] = 0
+
+    return H
+
+def graficar_huella(H, save_name="", xlim=[], ylim=[]):
+    fig, axis = plt.subplots(figsize=(8, 4))
+    plt.pcolormesh(H, shading='auto', cmap='binary')
+
+    # plt.title('Huella Digital Acústica H(m, n)')
+    plt.ylabel('Diferencia de Banda Logarítmica')
+    plt.xlabel('Frame de Tiempo')
+    # plt.colorbar(ticks=[0, 1], label='Valor de H(m, n)')
+    plt.gca().invert_yaxis() # invertir el eje y para que la frecuencia baja esté abajo
+    plt.tight_layout()
+
+    if len(xlim) != 0:
+        plt.xlim(xlim)
+
+    if len(ylim) != 0:
+        plt.ylim(ylim)
+
+    if save_name == "":
+        plt.show()
+    else:
+        save_plot(fig, save_name)
+
+def guardar_huella(ID, huella, DB):
+    """
+    Guarda la huella digital acústica 'huella' en la tabla hash de la estructura
+    DB, identificando la canción con el identificador numérico.
+
+    Parámetros
+    ----------
+    ID : int
+        Identificador numérico del tema que corresponde a esta huella.
+    huella : np.ndarray
+        Huella acústica en forma de matriz binaria (unos y ceros).
+    DB : dict
+        Estructura con los siguientes campos:
+            - 'hash_nbits': número de bits para el hash
+            - 'n_entries': número de columnas de la tabla
+            - 'ID_nbits': número de bits para guardar ID numérico de la canción
+            - 'tabla': tabla hash de tamaño (2**hash_nbits, n_entries)
+
+    Retorna
+    -------
+    DB : dict
+        Estructura con tabla hash actualizada.
+    """
+
+    # Verificamos que huella sea una matriz binaria
+    if not np.all((huella == 0) | (huella == 1)):
+        raise ValueError("La matriz HUELLA contiene elementos no binarios")
+
+    # Verificamos que huella tenga hash_nbits filas
+    if huella.shape[0] != DB['hash_nbits']:
+        raise ValueError(
+            f"La matriz HUELLA tiene {huella.shape[0]} filas en lugar de {DB['hash_nbits']}"
+        )
+
+    # Generamos el elemento val a guardar, concatenando los bits del ID con los
+    # bits del tiempo de cada frame
+    frames_nbits = 32 - DB['ID_nbits']
+    frames = np.mod(np.arange(1, huella.shape[1] + 1), 2 ** frames_nbits)
+    val = np.uint32(ID + (2 ** DB['ID_nbits']) * frames)
+
+    # Obtenemos las filas a guardar en la tabla, pasando las características de binario a decimal
+    # (bi2de en MATLAB toma bits por fila; aquí usamos huella.T para el mismo comportamiento)
+    hash_vals = np.dot(huella.T, 1 << np.arange(huella.shape[0])) + 1  # +1 por índices base 1
+
+    # Primero grabamos en las filas en que queda espacio
+    tabla = DB['tabla']
+    fila_ok = tabla[hash_vals - 1, -1] == 0  # Filas que tienen espacio al final
+    hash_ok = hash_vals[fila_ok]
+
+    # Cantidad de elementos no nulos por fila
+    count_nonzero = np.sum(tabla[hash_ok - 1, :] != 0, axis=1)
+    indices = (hash_ok - 1, count_nonzero)  # (fila, columna disponible)
+    tabla[indices] = val[fila_ok]
+
+    # Finalmente grabamos en las filas que están llenas, pisando algún valor anterior al azar
+    hash_col = hash_vals[~fila_ok]
+    if len(hash_col) > 0:
+        idx_rand = np.ceil(np.random.rand(len(hash_col)) * DB['n_entries']).astype(int) - 1
+        tabla[hash_col - 1, idx_rand] = val[~fila_ok]
+
+    DB['tabla'] = tabla
+    return DB
+
+def query_DB(DB, huella):
+    """
+    Hace un query a la base de datos para obtener el ID de las canciones
+    coincidentes con la huella. Devuelve los 5 primeros resultados que mejor
+    coinciden, ordenados en orden de prioridad descendente.
+
+    Parámetros
+    ----------
+    DB : dict
+        Estructura con los siguientes campos:
+            - 'hash_nbits': número de bits para el hash
+            - 'n_entries': número de columnas de la tabla
+            - 'ID_nbits': número de bits para guardar ID numérico de la canción
+            - 'tabla': tabla hash (np.ndarray de tamaño [2**hash_nbits, n_entries])
+    huella : np.ndarray
+        Huella acústica binaria (matriz de 0s y 1s)
+
+    Retorna
+    -------
+    ID : np.ndarray
+        Identificadores numéricos de los primeros 5 resultados que matchean
+    MATCHES : np.ndarray
+        Número de matches que tuvo cada ID
+    """
+
+    # Verificamos que HUELLA sea una matriz binaria
+    if not np.all((huella == 0) | (huella == 1)):
+        raise ValueError("La matriz HUELLA contiene elementos no binarios")
+
+    # Verificamos que HUELLA tenga hash_nbits filas
+    if huella.shape[0] != DB['hash_nbits']:
+        raise ValueError(
+            f"La matriz HUELLA tiene {huella.shape[0]} filas en lugar de {DB['hash_nbits']}"
+        )
+
+    # Obtenemos las filas a buscar en la tabla (binario → decimal)
+    hash_vals = np.dot(huella.T, 1 << np.arange(huella.shape[0])) + 1  # +1 por índice MATLAB base 1
+
+    # Extraemos los elementos de la tabla que corresponden a los hashes dados
+    vals = DB['tabla'][hash_vals - 1, :]   # restamos 1 para índice base 0
+    vals = vals[vals != 0]
+
+    # Si todos los elementos eran nulos, devolvemos ceros
+    if vals.size == 0:
+        return np.array([0], dtype=np.uint32), np.array([0], dtype=np.uint32)
+
+    # Extraemos de cada elemento el ID numérico y su frame
+    ID1 = np.mod(vals, 2 ** DB['ID_nbits'])
+    frames = np.floor_divide(vals, 2 ** DB['ID_nbits'])
+
+    # Filtrado temporal: para cada ID, contamos coincidencias dentro del frame_span
+    frame_span = huella.shape[1]
+    unique_IDs = np.unique(ID1)
+    MATCHES = np.zeros(len(unique_IDs), dtype=int)
+
+    for k, uid in enumerate(unique_IDs):
+        frame_aux = frames[ID1 == uid]
+        matches = 0
+        for k2 in range(len(frame_aux)):
+            # Número de matches en intervalo frame_span
+            match_aux = np.count_nonzero(
+                (frame_aux >= frame_aux[k2]) &
+                (frame_aux <= frame_aux[k2] + frame_span)
+            )
+            if match_aux > matches:
+                matches = match_aux
+        MATCHES[k] = matches
+
+    # Ordenar por número de coincidencias en orden descendente
+    idx = np.argsort(-MATCHES)  # orden descendente
+    MATCHES = MATCHES[idx]
+    unique_IDs = unique_IDs[idx]
+
+    # Mantener solo los 5 primeros resultados
+    Nm = min(5, len(unique_IDs))
+    ID = unique_IDs[:Nm]
+    MATCHES = MATCHES[:Nm]
+
+    return ID.astype(np.uint32), MATCHES.astype(np.uint32)
+
+def evaluar_aciertos(DB):
+    h, fs = filtro_fir_deducido()
+
+    incorrectos = 0
+    nro_pruebas = 0
+    for i, cancion in enumerate(canciones_dataset):
+        data = np.convolve(cancion.data, h, mode='same')
+        print(f'[LOG] Evaluando cancion `{cancion.path}`')
+        duracion_cancion = len(data) / cancion.fs
+        print(f'[LOG] Duracion cancion: {duracion_cancion:05.02f}s')
+        for r in range(0, 50):
+            for T in [5, 10, 20]: # segmentso de 5, 10 y 20 segundos
+                t_inicial = random.uniform(0.0, 1.0) * (duracion_cancion - 1.5*T)
+                t_inicial = 0 if t_inicial < 0 else t_inicial
+                print(f'[LOG] Intervalo {t_inicial:05.02f}:{t_inicial+T:05.02f}s', end='')
+                f, t, E = generate_spectogram(cancion.fs, data, t=t_inicial, dt=T)
+                H = generar_huella(E, cancion.fs)
+
+                nro_pruebas += 1
+                id, matches = query_DB(DB, H)
+
+                print(f' mejor coincidencia: `{canciones_dataset[id[0]].name}`')
+                if id[0] != i:
+                    incorrectos += 1
+
+        print("")
+
+    print(f'[LOG] cantidad de pruebas incorrectas: {incorrectos} de {nro_pruebas}')
+    print(f'[LOG] error porcentual: {(incorrectos/nro_pruebas)*100:0.02f}%')
