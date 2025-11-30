@@ -1,6 +1,7 @@
 from utils import *
 from scipy.signal import firwin, freqz, tf2zpk, get_window
 from scipy.fft import fftshift
+from scipy.io.wavfile import write as write_wav
 import random
 
 import pickle
@@ -217,6 +218,7 @@ def generar_base_de_datos_si_no_existe():
         except Exception as e:
             print(f"[ERROR] Ocurrio un error inesperado: {e}")
     else:
+        cargar_canciones_dataset()
         DB = generar_base_de_datos()
 
     return DB
@@ -463,6 +465,29 @@ def query_DB(DB, huella):
 
     return ID.astype(np.uint32), MATCHES.astype(np.uint32)
 
+def evaluar_cancion_raw(DB, cancion_data, cancion_fs, cancion_name):
+    h, fs = filtro_fir_deducido()
+
+    nro_pruebas = 0
+    data = np.convolve(cancion_data, h, mode='same')
+    print(f'[LOG] Evaluando cancion `{cancion_name}`')
+    duracion_cancion = len(cancion_data) / cancion_fs
+    print(f'[LOG] Duracion cancion: {duracion_cancion:05.02f}s')
+
+    for r in range(0, 10):
+        for T in [5, 10, 20]: # segmentso de 5, 10 y 20 segundos
+            t_inicial = random.uniform(0.0, 1.0) * (duracion_cancion - 1.5*T)
+            t_inicial = 0 if t_inicial < 0 else t_inicial
+            print(f'[LOG] Intervalo {t_inicial:05.02f}:{t_inicial+T:05.02f}s', end='')
+            f, t, E = generate_spectrogram(cancion_fs, data, t=t_inicial, dt=T)
+            H = generar_huella(E, cancion_fs)
+
+            nro_pruebas += 1
+            id, matches = query_DB(DB, H)
+            print(f' mejor coincidencia: `{canciones_dataset[id[0]].name}`')
+            
+    print("")
+
 def evaluar_cancion(DB, cancion):
     h, fs = filtro_fir_deducido()
 
@@ -471,6 +496,7 @@ def evaluar_cancion(DB, cancion):
     print(f'[LOG] Evaluando cancion `{cancion.path}`')
     duracion_cancion = len(data) / cancion.fs
     print(f'[LOG] Duracion cancion: {duracion_cancion:05.02f}s')
+
     for r in range(0, 10):
         for T in [5, 10, 20]: # segmentso de 5, 10 y 20 segundos
             t_inicial = random.uniform(0.0, 1.0) * (duracion_cancion - 1.5*T)
@@ -481,8 +507,8 @@ def evaluar_cancion(DB, cancion):
 
             nro_pruebas += 1
             id, matches = query_DB(DB, H)
-
             print(f' mejor coincidencia: `{canciones_dataset[id[0]].name}`')
+            
     print("")
 
 def evaluar_aciertos(DB):
@@ -495,8 +521,8 @@ def evaluar_aciertos(DB):
         print(f'[LOG] Evaluando cancion `{cancion.path}`')
         duracion_cancion = len(data) / cancion.fs
         print(f'[LOG] Duracion cancion: {duracion_cancion:05.02f}s')
-        for r in range(0, 10):
-            for T in [5, 10, 20]: # segmentso de 5, 10 y 20 segundos
+        for r in range(0, 5):
+            for T in [2, 3, 5]: # segmentso de 5, 10 y 20 segundos
                 t_inicial = random.uniform(0.0, 1.0) * (duracion_cancion - 1.5*T)
                 t_inicial = 0 if t_inicial < 0 else t_inicial
                 print(f'[LOG] Intervalo {t_inicial:05.02f}:{t_inicial+T:05.02f}s', end='')
@@ -514,3 +540,10 @@ def evaluar_aciertos(DB):
 
     print(f'[LOG] cantidad de pruebas incorrectas: {incorrectos} de {nro_pruebas}')
     print(f'[LOG] error porcentual: {(incorrectos/nro_pruebas)*100:0.02f}%')
+
+def agregar_ruido_a_cancion(data):
+    ruido = np.random.normal(loc=0, scale=0.1, size=len(data))
+    cancion_con_ruido = data + ruido
+    cancion_con_ruido = np.clip(cancion_con_ruido, -1.0, 1.0)
+    return cancion_con_ruido
+    

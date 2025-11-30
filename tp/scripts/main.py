@@ -10,7 +10,6 @@ from data import *
 ############################# Llamados a funciones ############################
 
 def primera_parte():
-    # time_domain
     time_domain_cancion1()
     time_domain_cancion2()
     time_domain_music_instruments()
@@ -39,10 +38,15 @@ def tercera_parte():
     # comparacion_de_espectrogramas_filtrado_vs_original(h)
     DB = generar_base_de_datos_si_no_existe()
     # evaluar_aciertos(DB)
-    evaluar_cancion(DB, canciones_dataset[0])
+    # evaluar_cancion(DB, canciones_prueba[0])
+
+    cancion_con_ruido_data = agregar_ruido_a_cancion(canciones_dataset[0].data)
+    cancion_con_ruido_fs = canciones_dataset[0].fs
+    write_wav("../out/000002_ruido.wav", cancion_con_ruido_fs, cancion_con_ruido_data)
+    evaluar_cancion_raw(DB, cancion_con_ruido_data, cancion_con_ruido_fs, "000002_ruido")
 
 cargar_canciones_dataset()
-cargar_canciones_prueba()
+# cargar_canciones_prueba()
 
 # primera_parte()
 # segunda_parte()

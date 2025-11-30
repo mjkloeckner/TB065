@@ -65,9 +65,8 @@ canciones_prueba = []
 
 def cargar_canciones_prueba(count=0):
     for i, file_name in enumerate(sorted(os.listdir(canciones_prueba_dir))):
-        if count != 0:
-            if i == count:
-                break
+        if count != 0 and i == count:
+            break
 
         basename, ext = os.path.splitext(file_name)
 
