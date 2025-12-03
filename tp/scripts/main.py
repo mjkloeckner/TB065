@@ -39,15 +39,13 @@ def tercera_parte():
     DB = generar_base_de_datos_si_no_existe()
     # evaluar_aciertos(DB)
     # evaluar_cancion(DB, canciones_prueba[0])
+    evaluar_aciertos_agregar_ruido(DB)
 
-    cancion_con_ruido_data = agregar_ruido_a_cancion(canciones_dataset[0].data)
-    cancion_con_ruido_fs = canciones_dataset[0].fs
-    write_wav("../out/000002_ruido.wav", cancion_con_ruido_fs, cancion_con_ruido_data)
-    evaluar_cancion_raw(DB, cancion_con_ruido_data, cancion_con_ruido_fs, "000002_ruido")
+def main():
+    # cargar_canciones_dataset()
+    # cargar_canciones_prueba()
 
-cargar_canciones_dataset()
-# cargar_canciones_prueba()
+    # primera_parte()
+    # segunda_parte()
+    # tercera_parte()
 
-# primera_parte()
-# segunda_parte()
-tercera_parte()

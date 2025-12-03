@@ -485,7 +485,7 @@ def evaluar_cancion_raw(DB, cancion_data, cancion_fs, cancion_name):
             nro_pruebas += 1
             id, matches = query_DB(DB, H)
             print(f' mejor coincidencia: `{canciones_dataset[id[0]].name}`')
-            
+
     print("")
 
 def evaluar_cancion(DB, cancion):
@@ -508,8 +508,68 @@ def evaluar_cancion(DB, cancion):
             nro_pruebas += 1
             id, matches = query_DB(DB, H)
             print(f' mejor coincidencia: `{canciones_dataset[id[0]].name}`')
-            
+
     print("")
+
+def agregar_ruido_a_cancion(data, sigma=0.1):
+    ruido = np.random.normal(loc=0, scale=sigma, size=len(data))
+    cancion_con_ruido = data + ruido
+    cancion_con_ruido = np.clip(cancion_con_ruido, -1.0, 1.0)
+    return cancion_con_ruido
+
+def calcular_potencia_ruido(potencia_orig, snr_db):
+    snr_lineal = 10**(snr_db / 10)
+    potencia_ruido = potencia_orig / snr_lineal
+    return potencia_ruido
+
+def evaluar_aciertos_agregar_ruido(DB):
+    h, fs = filtro_fir_deducido()
+
+    incorrectos = 0
+    nro_pruebas = 0
+
+    for i, cancion in enumerate(canciones_dataset):
+        lista_a_probar = []
+        lista_a_probar.append(cancion)
+
+        for snr_db in [0, 10, 20]:
+            potencia_cancion = np.mean(cancion.data**2)
+            potencia_ruido = calcular_potencia_ruido(potencia_cancion, snr_db)
+            sigma_ruido = np.sqrt(potencia_ruido)
+            data = agregar_ruido_a_cancion(cancion.data, sigma_ruido)
+            name = cancion.name + f"_ruido_SNR_{snr_db}dB"
+            lista_a_probar.append(SimpleNamespace(
+                name=name,
+                data=data,
+                fs=cancion.fs))
+
+        for T in [5, 10, 20]: # segmentso de 5, 10 y 20 segundos
+            duracion_cancion = len(cancion.data) / cancion.fs
+            print(f'[LOG] Duracion cancion: {duracion_cancion:05.02f}s')
+
+            t_inicial = random.uniform(0.0, 1.0) * (duracion_cancion - 1.5*T)
+            t_inicial = 0 if t_inicial < 0 else t_inicial
+            print(f'[LOG] Intervalo {T:05.02f}s {t_inicial:05.02f}:{t_inicial+T:05.02f}s')
+
+            for elemento in lista_a_probar:
+                data = np.convolve(elemento.data, h, mode='same')
+                print(f'[LOG] Evaluando cancion `{elemento.name}`', end='')
+
+                f, t, E = generate_spectrogram(elemento.fs, elemento.data, t=t_inicial, dt=T)
+                H = generar_huella(E, elemento.fs)
+
+                nro_pruebas += 1
+                id, matches = query_DB(DB, H)
+                print(f' mejor coincidencia: `{canciones_dataset[id[0]].name}`')
+                if id[0] != i:
+                    incorrectos += 1
+
+        print("")
+
+
+    print(f'[LOG] cantidad de pruebas incorrectas: {incorrectos} de {nro_pruebas}')
+    print(f'[LOG] error porcentual: {(incorrectos/nro_pruebas)*100:0.02f}%')
+
 
 def evaluar_aciertos(DB):
     h, fs = filtro_fir_deducido()
@@ -522,7 +582,7 @@ def evaluar_aciertos(DB):
         duracion_cancion = len(data) / cancion.fs
         print(f'[LOG] Duracion cancion: {duracion_cancion:05.02f}s')
         for r in range(0, 5):
-            for T in [2, 3, 5]: # segmentso de 5, 10 y 20 segundos
+            for T in [5, 10, 20]: # segmentso de 5, 10 y 20 segundos
                 t_inicial = random.uniform(0.0, 1.0) * (duracion_cancion - 1.5*T)
                 t_inicial = 0 if t_inicial < 0 else t_inicial
                 print(f'[LOG] Intervalo {t_inicial:05.02f}:{t_inicial+T:05.02f}s', end='')
@@ -541,9 +601,3 @@ def evaluar_aciertos(DB):
     print(f'[LOG] cantidad de pruebas incorrectas: {incorrectos} de {nro_pruebas}')
     print(f'[LOG] error porcentual: {(incorrectos/nro_pruebas)*100:0.02f}%')
 
-def agregar_ruido_a_cancion(data):
-    ruido = np.random.normal(loc=0, scale=0.1, size=len(data))
-    cancion_con_ruido = data + ruido
-    cancion_con_ruido = np.clip(cancion_con_ruido, -1.0, 1.0)
-    return cancion_con_ruido
-    
