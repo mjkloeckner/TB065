@@ -73,7 +73,7 @@ def time_plot_multiple(fs, data_arr, leg_arr, save_name="", t=0, dt=0, a=0, da=0
 
     return fig, ax
 
-def time_graph_data(x, y, t=0, dt=0, a=0, da=0, show=True):
+def time_graph_data(x, y, t=0, dt=0, a=0, da=0, ylim=[], show=True):
     figure, axis = plt.subplots(figsize=(8, 4))
 
     axis.plot(x, y, label='Señal de audio')
@@ -96,7 +96,11 @@ def time_graph_data(x, y, t=0, dt=0, a=0, da=0, show=True):
     axis.xaxis.set_major_formatter(FuncFormatter(ticks_label_format))
 
     axis.set_xlim(t, t+dt if dt > 0 else x[-1])
-    axis.set_ylim(-1.1, 1.1)
+
+    if len(ylim) != 0:
+        axis.set_ylim(ylim[0], ylim[1])
+    else:
+        axis.set_ylim(-1.1, 1.1)
 
     # resaltado de parte de la señal (solo si a != 0)
     axis.axvspan(a, a+da, color='skyblue',
@@ -128,9 +132,9 @@ def time_plot(fs, data, save_name="", t=0, dt=0, a=0, da=0):
 
     return fig, ax
 
-def save_plot(fig, name, overwrite=True, save_dir=""):
+def save_plot(fig, name, save_dir="", overwrite=True):
     base_name = os.path.basename(name)
-    file_name, ext = os.path.splitext(base_name)
+    file_name, ext = os.path.splitext(base_name.replace('.', '_'))
 
     if save_dir == "":
         save_dir = plot_dir
@@ -139,7 +143,6 @@ def save_plot(fig, name, overwrite=True, save_dir=""):
         save_dir += "/"
 
     file_path_no_ext = f'{save_dir}{file_name}'
-
     save_name = f'{file_path_no_ext}.png'
 
     if overwrite == False:
@@ -343,8 +346,8 @@ def freq_compute_fft(fs, data, t=0, dt=0, N=0):
     return interval_fft, interval_freqs
 
 # hace la transformacion a frecuencias y pasa lo transformado a `freq_graph_data`
-def freq_plot(fs, data, save_name="", f_min=0, f_max=0, y_min=0, y_max=0,
-              t=0, dt=0, a=0, da=0, show=False, N=0):
+def freq_plot(fs, data, f_min=0, f_max=0, y_min=0, y_max=0,
+              t=0, dt=0, a=0, da=0, show=False, N=0, save_name="", save_dir=""):
 
     interval_fft, interval_freqs = freq_compute_fft(fs, data, t, dt, N=N)
     N = len(interval_fft)
@@ -356,7 +359,7 @@ def freq_plot(fs, data, save_name="", f_min=0, f_max=0, y_min=0, y_max=0,
     fig, ax = freq_graph_data(x, y, f_min, f_max, y_min, y_max, show=show)
 
     if save_name != "":
-        save_plot(fig, save_name)
+        save_plot(fig, name=save_name, save_dir=save_dir)
 
     return fig, ax
 
@@ -390,7 +393,7 @@ def generate_spectrogram(fs, data, t=0, dt=0, N=1024, overlp=16, win='hamm'):
 
     return f, time, Sxx
 
-def spectrogram_plot(fs, data, save_name="", t=0, dt=0, N=1024,
+def spectrogram_plot(fs, data, save_name="", save_dir="", t=0, dt=0, N=1024,
                     overlp=16, win='hamm', xlim=[], ylim=[],
                     shading='gouraud', cmap='viridis', show=False):
 
@@ -415,7 +418,7 @@ def spectrogram_plot(fs, data, save_name="", t=0, dt=0, N=1024,
         plt.show()
     else:
         if save_name != "":
-            save_plot(fig, save_name, overwrite=True)
+            save_plot(fig, name=save_name, save_dir=save_dir, overwrite=True)
 
     return fig, axis
 
